@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { PRODUCTS } from './data/products'
 import ProductCard from './components/ProductCard'
 
@@ -135,14 +136,14 @@ export default function App(){
 
         <section className="info">
           <p className="global-disclaimer">
-            All products are for laboratory research-use only. Not for human consumption, nor medical, veterinary, or household uses. See <a href="/terms">Terms &amp; Conditions</a>.
+            All products are for laboratory research-use only. Not for human consumption, nor medical, veterinary, or household uses. See <Link to="/terms">Terms &amp; Conditions</Link>.
           </p>
         </section>
       </main>
 
       <footer className="site-footer">
         <p>© {new Date().getFullYear()} PeptideStream</p>
-        <nav><a href="/terms">Terms &amp; Conditions</a></nav>
+  <nav><Link to="/terms">Terms &amp; Conditions</Link></nav>
       </footer>
     </>
   )

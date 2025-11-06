@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 export default function ProductCard({ product, qty, onInc, onDec }) {
   return (
@@ -18,7 +19,7 @@ export default function ProductCard({ product, qty, onInc, onDec }) {
         </div>
       </div>
       <p className="disclaimer">
-        <a href="/terms" target="_blank" rel="noopener">{product.disclaimer}</a>
+        <Link to="/terms">{product.disclaimer}</Link>
       </p>
       {product.coa && <p className="coa"><a href={product.coa} target="_blank" rel="noopener">View Certificate of Analysis</a></p>}
     </div>
