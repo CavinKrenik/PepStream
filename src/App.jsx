@@ -9,16 +9,23 @@ export default function App() {
   return (
     <>
       <header className="site-header">
-        <div className="logo-wrap">
-          <Link to="/store">
-            <img
-              className="logo"
-              src="/assets/logo.png"
-              alt="PeptideStream Logo"
-            />
-          </Link>
-        </div>
-      </header>
+  <div className="logo-wrap">
+    <Link to="/store" className="brand-link">
+      <img
+        className="logo"
+        src="/assets/logo.png"
+        alt="PeptideStream Logo"
+      />
+      <div className="brand-text">
+        <span className="brand-name">PeptideStream</span>
+        <span className="brand-tagline">
+          Laboratory research-use only. Not for human consumption.
+        </span>
+      </div>
+    </Link>
+  </div>
+</header>
+
 
       {showBanner && (
         <div className="banner">
