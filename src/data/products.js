@@ -5,7 +5,7 @@ export const PRODUCTS = [
     price: 144.99,
     img: '/assets/Retatrutide.JPG',
     coa: '/assets/RetatrutideCertofAnalysis.jpg',
-    disclaimer: 'Retatrutide (LY-3437943) is sold for laboratory research use only. Terms of sale apply. Not for human consumption, nor medical, veterinary, or household uses. Please familiarize yourself with our Terms & Conditions prior to ordering.'
+    disclaimer: 'Retatrutide (LY-3437943) is supplied exclusively for laboratory research purposes. All sales are subject to our Terms of Sale. This product is not intended for human consumption or for use in medical, veterinary, or household applications. Please review our Terms & Conditions before placing an order.'
   },
   {
     id: 'bpc157',
@@ -13,7 +13,7 @@ export const PRODUCTS = [
     price: 59.99,
     img: '/assets/BPC157.jpg',
     coa: null,
-    disclaimer: 'BPC-157 is sold for laboratory research use only. Terms of sale apply. Not for human consumption, nor medical, veterinary, or household uses. Please familiarize yourself with our Terms & Conditions prior to ordering.'
+    disclaimer: 'BPC-157 is supplied exclusively for laboratory research purposes. All sales are subject to our Terms of Sale. This product is not intended for human consumption or for use in medical, veterinary, or household applications. Please review our Terms & Conditions before placing an order.'
   },
   {
     id: 'tb500',
@@ -21,7 +21,7 @@ export const PRODUCTS = [
     price: 62.99,
     img: '/assets/TB500.jpg',
     coa: null,
-    disclaimer: 'TB-500 Peptide is sold for laboratory research use only. Terms of sale apply. Not for human consumption, nor medical, veterinary, or household uses. Please familiarize yourself with our Terms & Conditions prior to ordering.'
+    disclaimer: 'TB-500 Peptide is supplied exclusively for laboratory research purposes. All sales are subject to our Terms of Sale. This product is not intended for human consumption or for use in medical, veterinary, or household applications. Please review our Terms & Conditions before placing an order.'
   },
   {
     id: 'ghkcu',
@@ -30,6 +30,6 @@ export const PRODUCTS = [
     img: '/assets/GHK-CU.jpg',
     coa: '/assets/GHK-CUCertofAnalysis.jpg',
     badge: 'Free Shipping',
-    disclaimer: 'GHK-Cu is sold for laboratory research use only. Terms of sale apply. Not for human consumption, nor medical, veterinary, or household uses. Please familiarize yourself with our Terms & Conditions prior to ordering.'
+    disclaimer: 'GHK-Cu is supplied exclusively for laboratory research purposes. All sales are subject to our Terms of Sale. This product is not intended for human consumption or for use in medical, veterinary, or household applications. Please review our Terms & Conditions before placing an order.'
   }
 ]
