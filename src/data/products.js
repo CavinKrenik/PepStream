@@ -5,6 +5,7 @@ export const PRODUCTS = [
     price: 144.99,
     img: '/assets/Retatrutide.JPG',
     coa: '/assets/RetatrutideCertofAnalysis.jpg',
+    badge: 'Free Shipping',
     disclaimer: 'Retatrutide (LY-3437943) is supplied exclusively for laboratory research purposes. All sales are subject to our Terms of Sale. This product is not intended for human consumption or for use in medical, veterinary, or household applications. Please review our Terms & Conditions before placing an order.'
   },
   {
@@ -13,6 +14,7 @@ export const PRODUCTS = [
     price: 59.99,
     img: '/assets/BPC157.jpg',
     coa: null,
+    badge: 'Free Shipping',
     disclaimer: 'BPC-157 is supplied exclusively for laboratory research purposes. All sales are subject to our Terms of Sale. This product is not intended for human consumption or for use in medical, veterinary, or household applications. Please review our Terms & Conditions before placing an order.'
   },
   {
@@ -21,6 +23,7 @@ export const PRODUCTS = [
     price: 62.99,
     img: '/assets/TB500.jpg',
     coa: null,
+    badge: 'Free Shipping',
     disclaimer: 'TB-500 Peptide is supplied exclusively for laboratory research purposes. All sales are subject to our Terms of Sale. This product is not intended for human consumption or for use in medical, veterinary, or household applications. Please review our Terms & Conditions before placing an order.'
   },
   {
