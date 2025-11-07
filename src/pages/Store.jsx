@@ -139,7 +139,7 @@ export default function Store() {
             id="address"
             name="address"
             rows="3"
-            placeholder="Street, City, State, ZIP"
+            placeholder="Name, Street, City, State, ZIP"
             required
           />
         </div>
