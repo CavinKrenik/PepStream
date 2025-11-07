@@ -6,7 +6,10 @@ export const PRODUCTS = [
     img: '/assets/Retatrutide.JPG',
     coa: '/assets/RetatrutideCertofAnalysis.jpg',
     badge: 'Free Shipping',
-    disclaimer: 'Retatrutide (LY-3437943) is supplied exclusively for laboratory research purposes. All sales are subject to our Terms of Sale. This product is not intended for human consumption or for use in medical, veterinary, or household applications. Please review our Terms & Conditions before placing an order.'
+    details:
+      'Retatrutide, also referred to as LY3437943, is an insulinotropic, glucose-dependent poly-peptide. The compound acts in a similar manner to various glucagon receptors, as well as commonly used peptides such as glucagon-like peptide 1 (GLP-1). Current research is focused on the use of glucagon receptors and peptides such as Retatrutide to prevent the development and advance the treatment for chronic epidemics such as obesity and type 2 diabetes.',
+    disclaimer:
+      'For laboratory research use only. Not for human consumption or use in medical, veterinary, or household applications. All sales are subject to our Terms & Conditions of Sale.'
   },
   {
     id: 'bpc157',
@@ -15,7 +18,10 @@ export const PRODUCTS = [
     img: '/assets/BPC157.jpg',
     coa: null,
     badge: 'Free Shipping',
-    disclaimer: 'BPC-157 is supplied exclusively for laboratory research purposes. All sales are subject to our Terms of Sale. This product is not intended for human consumption or for use in medical, veterinary, or household applications. Please review our Terms & Conditions before placing an order.'
+    details:
+      'BPC-157 is characterized as a pentadecapeptide containing a partial sequence of the Body Protection Compound (BPC). It has demonstrated positive effects on the efficiency and efficacy of various growth factors and regenerative processes, with research exploring its influence on tissue repair, spinal cord recovery, and wound healing.',
+    disclaimer:
+      'For laboratory research use only. Not for human consumption or use in medical, veterinary, or household applications. All sales are subject to our Terms & Conditions of Sale.'
   },
   {
     id: 'tb500',
@@ -24,7 +30,10 @@ export const PRODUCTS = [
     img: '/assets/TB500.jpg',
     coa: null,
     badge: 'Free Shipping',
-    disclaimer: 'TB-500 Peptide is supplied exclusively for laboratory research purposes. All sales are subject to our Terms of Sale. This product is not intended for human consumption or for use in medical, veterinary, or household applications. Please review our Terms & Conditions before placing an order.'
+    details:
+      'TB-500 is a synthetic peptide derived from thymosin beta-4, known for its ability to support tissue repair, reduce inflammation, and improve flexibility. It has been the focus of research for its regenerative potential in musculoskeletal and cardiovascular studies.',
+    disclaimer:
+      'For laboratory research use only. Not for human consumption or use in medical, veterinary, or household applications. All sales are subject to our Terms & Conditions of Sale.'
   },
   {
     id: 'ghkcu',
@@ -33,6 +42,9 @@ export const PRODUCTS = [
     img: '/assets/GHK-CU.jpg',
     coa: '/assets/GHK-CUCertofAnalysis.jpg',
     badge: 'Free Shipping',
-    disclaimer: 'GHK-Cu is supplied exclusively for laboratory research purposes. All sales are subject to our Terms of Sale. This product is not intended for human consumption or for use in medical, veterinary, or household applications. Please review our Terms & Conditions before placing an order.'
+    details:
+      'GHK-Cu is a complex made up of the tripeptide GHK (glycyl-histidyl-lysine) and copper ions. It is known for promoting skin healing and regeneration and is being researched for its potential applications in wound care, anti-aging, and dermatological studies.',
+    disclaimer:
+      'For laboratory research use only. Not for human consumption or use in medical, veterinary, or household applications. All sales are subject to our Terms & Conditions of Sale.'
   }
 ]

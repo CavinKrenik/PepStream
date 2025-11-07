@@ -10,7 +10,10 @@ export default function ProductCard({ product, qty, onInc, onDec }) {
   const coa = product.coa
   const details =
     product.details ||
-    'High-purity research peptide material intended solely for lawful laboratory research by qualified professionals. Not for human consumption.'
+    'High-purity research peptide material intended solely for lawful laboratory research by qualified professionals.'
+  const disclaimer =
+    product.disclaimer ||
+    'For laboratory research use only. Not for human consumption or use in medical, veterinary, or household applications. All sales are subject to our Terms & Conditions of Sale.'
 
   const toggle = () => setOpen(v => !v)
 
@@ -72,17 +75,28 @@ export default function ProductCard({ product, qty, onInc, onDec }) {
         </div>
       </div>
 
-      {/* short always-on disclaimer */}
+      {/* short always-on generic disclaimer */}
       <p className="disclaimer">
         For laboratory research use only. Not for human consumption, medical,
         veterinary, or household use. All purchases are subject to our{' '}
         <Link to="/terms">Terms &amp; Conditions of Sale</Link>.
       </p>
 
-      {/* expanded content */}
+      {/* expanded content: product-specific details + disclaimer + COA */}
       {open && (
         <div className="product-details">
-          <p>{details}</p>
+          {details && <p>{details}</p>}
+          {disclaimer && (
+            <p
+              style={{
+                fontSize: '12px',
+                color: 'var(--muted)',
+                marginTop: '4px',
+              }}
+            >
+              {disclaimer}
+            </p>
+          )}
           {coa && (
             <p className="coa">
               <a
