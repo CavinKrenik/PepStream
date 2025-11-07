@@ -211,7 +211,7 @@ export default function Store() {
             rel="noopener"
             aria-disabled={grand <= 0}
           >
-            Pay Now
+            Pay Now -Coming Soon
           </a>
           <button
             type="submit"
