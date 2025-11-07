@@ -102,7 +102,7 @@ export default function App(){
 
           <div className="field-row">
             <label htmlFor="phone">Phone</label>
-            <input id="phone" name="phone" type="tel" placeholder="(555) 555-5555" required />
+            <input id="phone" name="phone" type="tel" placeholder="+1 (555) 555-5555" required />
           </div>
 
           <div className="field-row">
