@@ -1,103 +1,317 @@
 import React from 'react'
 
-export default function Terms(){
+export default function Terms() {
   return (
     <main className="container">
-      <h1 className="title">Terms &amp; Conditions of Sale to End Users of PeptideStream, Inc.</h1>
+      <h1 className="title">Terms &amp; Conditions for PeptideStream</h1>
 
-      <div className="card" style={{marginTop:12}}>
-        <p><strong>Acceptance of Terms</strong></p>
-        <p>By purchasing and accepting delivery of any products supplied by PeptideStream ("Products") you agree to be bound by these terms and conditions (the "Terms and Conditions"). Any other terms or conditions contained in any order form or other document submitted by you which are inconsistent with, or in addition to, these Terms and Conditions are rejected, objected to and shall be deemed void and of no force or effect.</p>
+      <div className="card" style={{ marginTop: 12, lineHeight: 1.6 }}>
+        <h2>Acceptance of Terms</h2>
+        <p>
+          By purchasing and accepting delivery of any products supplied by
+          PeptideStream (&quot;Products&quot;) you agree to be bound by these
+          Terms and Conditions. Any other terms or conditions contained in any
+          order form or other document submitted by you which are inconsistent
+          with, or in addition to, these Terms and Conditions are rejected,
+          objected to and shall be deemed void and of no force or effect.
+        </p>
 
-        <p><strong>Changes</strong></p>
-        <p>Once submitted, any change(s) to your order(s) may be made only with advance written approval of PeptideStream and such changes may require different terms, including a change in the price and/or time of delivery. Once submitted, you may not cancel any order unless cancellation is expressly approved by PeptideStream in writing, which approval may be contingent on your payment of PeptideStream’s costs or other charges, including, but not limited to, storage and shipment costs, costs of producing non-standard materials, costs of purchasing non-returnable materials, cancellation costs imposed on PeptideStream by its suppliers, and any other costs resulting from cancellation. A verified bill of costs issued by an officer or other authorized representative of PeptideStream shall be conclusive as to the amount of such costs. PeptideStream reserves the right to cancel any order, in whole or in part, upon your breach of these terms and conditions or your bankruptcy, insolvency, dissolution, receivership proceedings, or upon the occurrence of any event leading PeptideStream to reasonably question your willingness or ability to pay.</p>
+        <h2>Changes</h2>
+        <p>
+          Once submitted, any change(s) to your order(s) may be made only with
+          advance written approval of PeptideStream, and such changes may require
+          different terms, including a change in price and/or delivery time.
+          Orders may not be cancelled unless PeptideStream expressly approves in
+          writing, which may be contingent upon your payment of all associated
+          costs, including but not limited to storage, non-standard materials,
+          non-returnable materials, supplier charges, and other expenses. A
+          verified bill of costs issued by PeptideStream shall be conclusive.
+          PeptideStream reserves the right to cancel any order upon your breach
+          of these Terms, or in the event of your bankruptcy, insolvency,
+          dissolution, receivership, or any circumstance that reasonably calls
+          into question your ability or willingness to pay.
+        </p>
 
-        <p><strong>Delivery, claims</strong></p>
-        <p>Delivery of Products to the carrier at PeptideStream’s shipping point shall constitute delivery to you and you shall bear all risk of loss or damage in transit. PeptideStream reserves the right, in its sole discretion, to determine the exact method of shipment for any particular shipment. PeptideStream reserves the right to make delivery in instalments, all such instalments to be separately invoiced and paid for when due per invoice, without regard to subsequent deliveries. Delay in delivery of any instalment shall not relieve you of your obligations to accept remaining deliveries. Immediately upon your receipt of any Products shipped hereunder, you shall inspect the same and shall notify PeptideStream in writing of any claims for shortages, defects or damages and shall hold Products for PeptideStream’s written instructions concerning disposition. You have two weeks (14 days) upon receiving your Products, to address any defects, damages, and issues. Any inquiries after will no longer be valid. If you fail to so notify PeptideStream within 1 day after the Products have been received by you, such Products shall conclusively be deemed to conform to the terms and conditions hereof and to have been irrevocably accepted by the you.</p>
+        <h2>Delivery &amp; Claims</h2>
+        <p>
+          Delivery of Products to the carrier at PeptideStream’s shipping point
+          constitutes delivery to you, and you bear all risk of loss or damage
+          in transit. PeptideStream reserves the right to determine the method
+          of shipment and to make delivery in installments, each separately
+          invoiced. Delay in one installment does not relieve you of the
+          obligation to accept the others.
+        </p>
+        <p>
+          Immediately upon receipt, you must inspect the Products and notify
+          PeptideStream in writing of any shortages, defects, or damage, and
+          hold the Products pending instructions. You have fourteen (14) days
+          from receipt to report issues; inquiries after that window are not
+          valid. If you fail to notify PeptideStream within one (1) day of
+          receipt, the Products are deemed conforming and irrevocably accepted.
+        </p>
+        <p>
+          If you choose to opt out of the automatically calculated and included
+          shipping insurance protection program, and your package is lost or
+          damaged by the carrier, you will not receive a replacement shipment.
+          PeptideStream strongly recommends that you do not opt out of shipping
+          insurance. By placing an order without shipping insurance, you agree
+          that shipment, non-delivery, missing package, and damage claims are
+          null and void and that you are solely responsible for any such issues.
+        </p>
 
-        <p>If you the customer chooses to opt out of our automatically calculated and included shipping insurance protection program, and your package is lost or damaged by one of the shipping carriers, you will not receive a replacement shipment.</p>
+        <h2>Waiver of Liability for Delivery</h2>
+        <p>
+          PROOF OF DISPATCH OF THE MERCHANDISE WILL BIND THE CARDHOLDER.
+          MERCHANT OFFERS CARDHOLDER THE OPPORTUNITY TO PURCHASE SHIPPING
+          INSURANCE PROTECTION WHICH SHALL BE CARDHOLDER’S SOLE REMEDY IN THE
+          EVENT MERCHANDISE IS DISPATCHED BY MERCHANT BUT NOT RECEIVED BY
+          CARDHOLDER.
+        </p>
 
-        <p>So that the customer is fully protected during scanning in, shipment and transit of package(s) PeptideStream strongly recommends that you do not opt out of the optional shipping insurance protection.</p>
+        <h2>Delays &amp; Force Majeure</h2>
+        <p>
+          Any specified delivery dates are estimates only and do not constitute
+          a promise. PeptideStream shall not be liable for any loss, damage or
+          penalty resulting from delay or failure to perform due to causes
+          beyond its reasonable control (&quot;Force Majeure Events&quot;),
+          including but not limited to acts of God, fire, explosion, accident,
+          vandalism, theft, war, terrorism, riots, labor disputes, pandemics,
+          epidemics, embargoes, governmental actions, supply chain disruptions,
+          carrier delays, or inability to obtain materials, power, or labor at
+          reasonable cost.
+        </p>
 
-        <p>By clicking on agree to terms and placing an order on PeptideStream website, customer agrees that any and all shipment, non delivery, missing packages and damage claims are null and void without purchase of shipment protection insurance. Please do not opt out of shipping insurance protection during ordering process so that you the customer remains protected against any potential loss. Without shipping insurance protection customer is responsible for any potential package delivery issues.</p>
+        <h2>Allocation of Products</h2>
+        <p>
+          If PeptideStream is unable to supply the total demand for Products
+          specified in your order, PeptideStream may allocate its available
+          supply among customers (including distributors) as it deems fair and
+          practical, without liability.
+        </p>
 
-        <p><strong>Waiver of Liability For Delivery</strong></p>
-        <p>WAIVER OF LIABILITY FOR DELIVERY: PROOF OF DISPATCH OF THE MERCHANDISE WILL BIND THE CARDHOLDER. MERCHANT OFFERS CARDHOLDER THE OPPORTUNITY TO PURCHASE SHIPPING INSURANCE PROTECTION WHICH SHALL BE CARDHOLDER’S SOLE REMEDY IN THE EVENT MERCHANDISE IS DISPATCHED BY MERCHANT BUT NOT RECEIVED BY CARDHOLDER.</p>
+        <h2>Payment, Interest &amp; Chargebacks</h2>
+        <p>
+          In the event of default in payment or other breach, PeptideStream may,
+          without prejudice to other remedies, defer delivery, cancel your
+          orders, and/or sell undelivered Products for your account and apply
+          proceeds against the purchase price. You agree to pay any remaining
+          balance on demand.
+        </p>
+        <p>
+          Any unapproved chargebacks will result in your information being
+          reported to collections. Interest of 0.83% per month (or the maximum
+          rate permitted by law, if lower) is charged on unpaid balances not
+          paid in full within ten (10) days of invoice.
+        </p>
 
-        <p><strong>Delays</strong></p>
-        <p>Any specified delivery dates are estimates only and do not represent a promise by PeptideStream to deliver Products at a date certain. PeptideStream shall not be liable for any loss, damage or penalty as a result of any delay in or failure to manufacture, deliver or otherwise perform hereunder due to any cause beyond PeptideStream’s reasonable control, including, without limitation, unsuccessful reactions, act(s) of you, embargo or other governmental act, regulation or request affecting the conduct of PeptideStream’s business, fire, explosion, accident, theft, vandalism, riot, acts of war, strikes or other labor difficulties, lightning, flood, windstorm or other acts of God, delay in transportation, or inability to obtain necessary labor, fuel, materials, supplies or power at current prices.</p>
+        <h3>US Bank Account Payment Method (ACH)</h3>
+        <p>
+          ACH payments may involve a credit (&quot;push&quot;) or debit
+          (&quot;pull&quot;) and are typically processed in batches over 3–4
+          business days. By authorizing ACH, you consent to these transfers and
+          timing as determined by the ACH network and participating financial
+          institutions.
+        </p>
 
-        <p><strong>Allocation of Products</strong></p>
-        <p>If PeptideStream is unable for any reason to supply the total demands for Products specified in your order, PeptideStream may allocate its viable supply among any or all customers (including PeptideStream’s distributors) on such basis as PeptideStream may deem fair and practical, without liability for any failure of performance which may result therefrom.</p>
+        <h2>Taxes &amp; Other Charges</h2>
+        <p>
+          Except for any sales tax collected and invoiced by PeptideStream, you
+          are responsible for all taxes, duties, fees, or charges imposed by any
+          authority in connection with the transaction. If PeptideStream is
+          required to pay any such amounts, you shall reimburse PeptideStream or
+          provide a valid exemption certificate.
+        </p>
 
-        <p><strong>Payment and Interest</strong></p>
-        <p>In the event of default by you in the payment of the purchase price or otherwise, PeptideStream, at its option, without prejudice to any other of PeptideStream’s lawful remedies, may defer delivery, cancel your order and any other order of you, or sell any undelivered products on hand for the account of you and apply such proceeds as a credit, without set-off or deduction of any kind, against the agreed upon purchase price, and you agree to pay the balance then due to PeptideStream on demand. For any chargebacks done by the customer, and not approved by PeptideStream, will result in the customer’s information being reported to collections.</p>
+        <h2>Pricing &amp; Price Changes</h2>
+        <p>
+          Quotations are firm only if you place a corresponding order within the
+          stated validity period or, if none, within thirty (30) days. If, prior
+          to delivery, PeptideStream’s material costs increase by 10% or more,
+          PeptideStream may cancel undelivered orders or condition performance
+          on your acceptance of a corresponding price increase.
+        </p>
 
-        <p>An interest charge of 0.83% per month (or the maximum rate permitted by law if less than 0.83% per month) is charged on any unpaid balance. Interest charges accrue if the invoiced amount is not paid in full within 10 days of the invoice date.</p>
+        <h2>Warranties &amp; Limitations</h2>
+        <p>
+          PeptideStream warrants that Products, at the time of shipment, conform
+          to the description in its product literature or analytical data.
+          THIS WARRANTY IS EXCLUSIVE AND IN LIEU OF ALL OTHER WARRANTIES,
+          EXPRESS OR IMPLIED, INCLUDING MERCHANTABILITY, FITNESS FOR A
+          PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+        </p>
+        <p>
+          Warranties are void if Products are misused, handled contrary to
+          industry standards, used outside provided instructions, or used in any
+          prohibited manner. IN NO EVENT SHALL PEPTIDESTREAM BE LIABLE FOR ANY
+          INDIRECT, INCIDENTAL, CONSEQUENTIAL, OR SPECIAL DAMAGES, INCLUDING
+          LOSS OF PROFITS, LOSS OF USE, BUSINESS INTERRUPTION, OR PERSONAL
+          INJURY. LIABILITY SHALL NOT EXCEED THE CONTRACT PRICE OF THE PRODUCTS
+          GIVING RISE TO THE CLAIM.
+        </p>
 
-        <p><strong>US Bank Account Payment Method</strong></p>
-        <p>ACH (Automated Clearing House) payment processing facilitates electronic transfers between bank accounts, involving a “push” (credit) or “pull” (debit) of funds, typically processed in batches over 3-4 business days (excluding weekends and holidays).</p>
-        <ol>
-          <li><strong>Initiation:</strong> The customer authorizes an ACH debit of their account.</li>
-          <li><strong>Batching:</strong> The ACH processor collects multiple ACH requests and groups them into batches. These batches are then sent to an ACH operator, which can be either the Federal Reserve or The Clearing House.</li>
-          <li><strong>Processing:</strong> The ACH operator processes the batches and routes them to the bank holding the recipient’s account, called the Receiving Depository Financial Institution (RDFI). The RDFI then debits or credits the recipient’s account depending on the type of ACH transaction initiated.</li>
-        </ol>
+        <h2>Your Use of Products</h2>
+        <p>
+          Products are intended solely for lawful laboratory research by
+          qualified professionals. Unless expressly stated otherwise, Products
+          are not to be used:
+        </p>
+        <ul>
+          <li>In humans or animals for diagnostic, therapeutic, or cosmetic use</li>
+          <li>In foods, drugs, medical devices, or cosmetics</li>
+          <li>For household use or any form of human consumption</li>
+        </ul>
+        <p>
+          You are responsible for ensuring compliance with all applicable laws
+          and regulations, including but not limited to FDA, DEA, TSCA, and
+          institutional review/animal care requirements. You agree to properly
+          test, handle, store, and dispose of Products and to warn all relevant
+          personnel of associated risks.
+        </p>
 
-        <p><strong>Taxes and other charges</strong></p>
-        <p>PeptideStream shall not be responsible for the payment of any use tax, sales tax, excise tax, duty, custom, inspection or testing fee, or any other tax, fee or charge of any nature whatsoever imposed by any governmental authority, on or measured by the transaction between, with the sole exception of any sales taxes invoiced and collected from you by PeptideStream. All other such charges (if any) must be paid by you separately and in addition to the prices quoted or invoiced. In the event PeptideStream is required to pay any such tax, fee or charge, you shall reimburse PeptideStream therefore; or, in lieu of such payment, you shall provide PeptideStream at the time the order is submitted an exemption certificate or other document acceptable to the authority imposing the tax, fee or charge.</p>
+        <h2>Resale, Distribution &amp; Export</h2>
+        <p>
+          You agree to use Products directly and solely as permitted. Marketing,
+          distribution, resale, or export is prohibited unless expressly
+          authorized in writing by PeptideStream. You agree not to export or
+          re-export Products in violation of U.S. laws, including the Export
+          Administration Regulations (EAR) and International Traffic in Arms
+          Regulations (ITAR). PeptideStream may refuse orders to embargoed
+          jurisdictions or restricted parties.
+        </p>
 
-        <p><strong>Pricing</strong></p>
-        <p>Any quotation provided by PeptideStream is firm only if you place a corresponding order within the time specified on the quote or, if no time period is mentioned, within 30 days.</p>
+        <h2>Patent Disclaimer</h2>
+        <p>
+          PeptideStream does not warrant that the use or sale of Products will
+          not infringe any patent or other intellectual property rights.
+        </p>
 
-        <p><strong>Price Changes</strong></p>
-        <p>Shipment will be made promptly even if prices have been nominally increased. Notwithstanding any price quotation or prices listed by PeptideStream, if at any time prior to delivery PeptideStream’s costs of materials have increased by 10% or more, then PeptideStream may cancel any accepted but undelivered orders or condition the continuance of any order on your agreement to a corresponding increase in price.</p>
+        <h2>Returns</h2>
+        <p>
+          All sales are final. No refunds for packages returned to PeptideStream.
+          Returns for credit are only allowed with prior written authorization
+          and in strict compliance with PeptideStream’s return instructions.
+          Certain items and quantities may not be returnable under any
+          circumstances.
+        </p>
 
-        <p><strong>Warranties</strong></p>
-        <p>PeptideStream warrants that its products shall, at the time of shipment, conform to the description of such products as provided to you by PeptideStream through PeptideStream’s product directory, analytical data or other then-current literature. THIS WARRANTY IS EXCLUSIVE, AND PEPTIDESTREAM MAKES NO OTHER WARRANTY, EXPRESS OR IMPLIED, INCLUDING ANY WARRANTY OF MERCHANTABILITY, FITNESS FOR ANY PARTICULAR PURPOSE, OR NON-INFRINGEMENT OF ANY THIRD-PARTY PATENT OR INTELLECTUAL PROPERTY RIGHTS.</p>
-        <p>PeptideStream’s warranties made in connection with this sale shall not be effective if PeptideStream has determined, in its sole discretion, that you have misused the Products in any manner, have failed to use the Products in accordance with industry standards and practices, or have failed to use the Products in accordance with instructions, if any, furnished by PeptideStream.</p>
-        <p>PEPTIDESTREAM SHALL NOT IN ANY EVENT BE LIABLE FOR INCIDENTAL, CONSEQUENTIAL OR SPECIAL DAMAGES OF ANY KIND RESULTING FROM ANY USE OR FAILURE OF THE PRODUCTS, EVEN IF PEPTIDESTREAM HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE INCLUDING, WITHOUT LIMITATION, LIABILITY FOR LOSS OF USE, COST OF CAPITAL, LOSS OF WORK IN PROGRESS, DOWN TIME, LOSS OF REVENUE OR PROFITS, FAILURE TO REALIZE SAVINGS, ANY LIABILITY OF BUYER TO A THIRD PARTY, OR FOR ANY LABOR OR ANY OTHER EXPENSE, DAMAGE OR LOSS OCCASIONED BY SUCH PRODUCT INCLUDING, BUT NOT LIMITED TO, PERSONAL INJURY. THE EXCLUSION OF SUCH CLAIMS SHALL BE DEEMED INDEPENDENT OF, AND SHALL SURVIVE, ANY FAILURE OF THE ESSENTIAL PURPOSE OF ANY LIMITED REMEDY ARISING FROM THE PURCHASE AND/OR THESE TERMS AND CONDITIONS. PEPTIDESTREAM’S LIABILITY FOR DAMAGES HEREUNDER SHALL IN NO CASE EXCEED THE CONTRACT PRICE FOR THE SPECIFIC PRODUCTS THAT GIVE RISE TO THE BREACH. THESE EXCLUSIONS AND LIMITATIONS ON DAMAGES SHALL APPLY REGARDLESS OF HOW THE LOSS OR DAMAGE MAY BE CAUSED AND AGAINST ANY THEORY OF LIABILITY, WHETHER BASED ON CONTRACT, INDEMNITY, WARRANTY, TORT, NEGLIGENCE, STRICT LIABILITY, OR ANY OTHER THEORY.</p>
+        <h2>Verification Policy</h2>
+        <p>
+          PeptideStream may require identity, institutional, or other
+          verification. Any customer who refuses or fails verification may be
+          blocked from purchasing.
+        </p>
 
-        <p><strong>Your Use of Products</strong></p>
-        <p>PeptideStream’s Products are intended primarily for laboratory research purposes and, unless otherwise stated on product labels, in PeptideStream’s product directory or in other literature furnished to you, are not to be used for any other purposes, including but not limited to, in vitro diagnostic purposes, in foods, drugs, medical devices or cosmetics for humans or animals or for commercial purposes. You acknowledge that the Products have not been tested by PeptideStream for safety and efficacy in food, drug, medical device, cosmetic, commercial or any other use.</p>
-        <p>You expressly represent and warrant to PeptideStream that you will properly test, use, manufacture and market any Products purchased from PeptideStream and/or materials produced with Products purchased from PeptideStream in accordance with the practices of a reasonable person who is an expert in the field and in strict compliance with all applicable laws and regulations, now and hereinafter enacted. You further warrant to PeptideStream that any material produced with Products from PeptideStream shall not be adulterated or misbranded within the meaning of the Federal Food, Drug and Cosmetic Act and shall not be materials which may not, under Sections 404, 505, or 512 of the Act, be introduced into interstate commerce.</p>
-        <p>You realize that, since PeptideStream’s Products are, unless otherwise stated, intended primarily for research purposes, they may not be on the Toxic Substances Control Act (TSCA) inventory. You assume responsibility to assure that the Products purchased from PeptideStream are approved for use under TSCA, if applicable. You have the responsibility to verify the hazards and to conduct any further research necessary to learn the hazards involved in using Products purchased from PeptideStream. You also assume the duty to warn your employees, those associated with you and any auxiliary personnel (such as freight handlers, etc.) of any risks involved in using or handling the Products.</p>
-        <p>You agree to comply with instructions, if any, furnished by PeptideStream relating to the use of the Products and not misuse the Products in any manner. If the Products purchased from PeptideStream are to be repackaged, relabelled or used as starting material or components of other products, you agree that you will verify PeptideStream’s assay of the Products. No Products purchased from PeptideStream shall, unless otherwise stated, be considered to be foods, drugs, medical devices or cosmetics.</p>
+        <h2>Technical Assistance</h2>
+        <p>
+          Any technical assistance or information provided by PeptideStream is
+          at its discretion and is provided &quot;as is&quot; without warranty
+          of any kind. Such assistance does not create any additional warranty
+          unless explicitly confirmed in a signed writing by an authorized
+          representative.
+        </p>
 
-        <p><strong>Resale, Distribution and Export Prohibited</strong></p>
-        <p>You warrant to PeptideStream that you will use the Products directly and as permitted above, and you further agree that the Products may not be marketed, distributed, resold or exported by you for any purpose.</p>
+        <h2>Privacy &amp; Data Handling</h2>
+        <p>
+          By placing an order, you consent to PeptideStream’s collection, use,
+          storage, and disclosure of your personal information as described in
+          its Privacy Policy. Data is used for order processing, verification,
+          fraud prevention, and legal compliance. While reasonable safeguards
+          are implemented, no system is completely secure. You may request
+          access, correction, or deletion of your data by contacting
+          ryanharper38@gmail.com. Applicable data protection laws, including
+          GDPR and CCPA where relevant, will be observed.
+        </p>
 
-        <p><strong>Patent disclaimer</strong></p>
-        <p>PeptideStream does not warrant that the use or sale of the Products delivered hereunder will not infringe the claims of any United States or other patents covering the product itself or the use thereof in combination with other products or in the operation of any process.</p>
+        <h2>Intellectual Property &amp; Custom Products</h2>
+        <p>
+          Unless otherwise agreed in writing, all intellectual property rights in
+          custom or modified Products remain with PeptideStream. You warrant
+          that any specifications you provide do not infringe third-party
+          rights.
+        </p>
 
-        <p><strong>Returns</strong></p>
-        <p>All sales are final. We do not provide refunds for any packages return to PeptideStream. Products may not be returned for credit except with PeptideStream’s permission, and then only in strict compliance with PeptideStream’s return shipment instructions. You must obtain advance written authorization from PeptideStream and a written return authorization document in the form then in use by PeptideStream, prior to returning any Products. Certain items and quantities may not be returned for credit or under any circumstances.</p>
+        <h2>Age &amp; Eligibility</h2>
+        <p>
+          By ordering, you represent and warrant that you are of legal age
+          (minimum 18, or higher if required in your jurisdiction) and
+          purchasing solely for lawful research purposes, whether individually
+          or on behalf of a qualified institution. PeptideStream reserves the
+          right to refuse service.
+        </p>
 
-        <p><strong>Verification Policy</strong></p>
-        <p>All new and existing customers may go through a verification policy. Any customer/cardholder who denies or objects to the verification process will be blocked from the PeptideStream’s website.</p>
+        <h2>Miscellaneous</h2>
+        <p>
+          Failure by PeptideStream to enforce any provision shall not be deemed
+          a waiver of future enforcement. If any provision is held invalid, the
+          remaining provisions remain in full force. Headings are for
+          convenience only. These Terms bind and benefit the parties and their
+          permitted successors and assigns.
+        </p>
 
-        <p><strong>Technical Assistance</strong></p>
-        <p>At your request, PeptideStream may, in PeptideStream’s sole and absolute discretion, furnish technical assistance and information with respect to PeptideStream’s Products. PEPTIDESTREAM MAKES NO WARRANTIES OF ANY KIND OR NATURE, EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR ANY PARTICULAR PURPOSE, WITH RESPECT TO TECHNICAL ASSISTANCE OR INFORMATION PROVIDED BY PEPTIDESTREAM OR ITS PERSONNEL. ANY SUGGESTIONS BY PEPTIDESTREAM REGARDING USE, SELECTION, APPLICATION OR SUITABILITY OF THE PRODUCTS SHALL NOT BE CONSTRUED AS AN EXPRESS WARRANTY UNLESS SPECIFICALLY DESIGNATED AS SUCH IN A WRITING SIGNED BY AN OFFICER OR OTHER AUTHORIZED REPRESENTATIVE OF PEPTIDESTREAM.</p>
+        <h2>Amendments</h2>
+        <p>
+          PeptideStream may amend these Terms at any time by posting updated
+          terms on its website. Material changes may be additionally noticed via
+          email or site notice. Continued ordering or site use constitutes
+          acceptance of amended Terms.
+        </p>
 
-        <p><strong>Miscellaneous</strong></p>
-        <p>PeptideStream’s failure to strictly enforce any particular term or condition contained herein or to exercise any right with respect to your order shall not constitute a waiver of PeptideStream’s right to strictly enforce such terms or conditions or exercise such right thereafter. All rights and remedies are cumulative and are in addition to any other rights and remedies PeptideStream may have at law or in equity. Any waiver of a default by you shall be in writing and shall not operate as a waiver of any other default or of the same default thereafter. If any of these terms shall be held to be invalid, illegal or unenforceable, the validity, legality and enforceability of the remaining provisions shall not be affected or impaired thereby. The section headings herein are for convenience only; they form no part of the Terms and Conditions and shall not affect their interpretation. These Terms and Conditions shall be binding upon, inure to the benefit of, and be enforceable by, the parties hereto, and their respective heirs, personal representatives, successors and assigns.</p>
+        <h2>Notices</h2>
+        <p>
+          Notices to PeptideStream shall be sent to
+          {' '}
+          <a href="mailto:ryanharper38@gmail.com">
+            ryanharper38@gmail.com
+          </a>
+          .
+          Notices to you may be sent to the email or address provided with your
+          order or registration.
+        </p>
 
-        <p><strong>Governing Law, Disputes</strong></p>
-        <p>All disputes allegedly arising from the legality, interpretation, application, or performance of your order, the Products or any of these Terms and Conditions shall be governed by the laws of the State of Arizona including its conflict of laws principles. The parties agree to waive, to the fullest extent permitted by law, any and all rights to a trial by jury in connection with any dispute.</p>
+        <h2>Governing Law &amp; Disputes</h2>
+        <p>
+          These Terms are governed by the laws of the State of Arizona, without
+          regard to conflicts principles. Disputes shall first be addressed via
+          good-faith negotiation. Unresolved disputes shall be submitted to
+          binding arbitration administered by the American Arbitration
+          Association (AAA) in Maricopa County, Arizona, before a single
+          arbitrator. The parties waive any right to a jury trial or class
+          action to the fullest extent permitted by law. The prevailing party
+          may recover reasonable attorneys’ fees and costs.
+        </p>
 
-        <p><strong>Indemnity and Insurance</strong></p>
-        <p>You shall indemnify and hold PeptideStream, its agents, employees and representatives harmless from and against any and all claims, damages, losses, costs or expenses (including attorney’s fees) resulting from your (a) sale or use of the Products, (b) breach of the provisions and representations contained in the Terms and Conditions or (c) negligence, recklessness or misconduct.</p>
+        <h2>Indemnity &amp; Insurance</h2>
+        <p>
+          You shall indemnify and hold harmless PeptideStream, its officers,
+          employees, and agents from all claims, damages, losses, costs, and
+          expenses (including attorneys’ fees) arising from (a) your use or sale
+          of Products; (b) your breach of these Terms; or (c) your negligence,
+          recklessness, or misconduct.
+        </p>
 
-        <p><strong>Ethical Research Mandate</strong></p>
-        <p>“PeptideStream strongly encourages all research to be conducted in compliance with the appropriate regulatory framework.”</p>
-        <p>“Mammalian research must meet high ethical and scientific standards. Studies conducted in the United States must be designed, reviewed, approved, and implemented in accord with accepted ethical principles and the U.S. Department of Health and Human Services (45 CFR 46) and U.S. Food and Drug Administration (21 CFR 50 and 56) regulations. As mandated by the Animal Welfare Act, it is the responsibility of each research institution to ensure that all individuals using animals in research or teaching are appropriately trained. Therefore, PeptideStream encourages all personnel using animals in research and teaching to complete required training before being listed on any relevant Institutional Animal Care and Use Committee protocol.”</p>
+        <h2>Ethical Research Mandate</h2>
+        <p>
+          PeptideStream strongly encourages that all research involving its
+          Products be conducted in compliance with applicable ethical and legal
+          standards, including but not limited to 45 CFR 46, 21 CFR 50 and 56,
+          the Animal Welfare Act, and institutional IACUC or IRB requirements.
+          Where Products are controlled substances, you are solely responsible
+          for compliance with DEA and related regulations.
+        </p>
 
-        <p>Any chargebacks done by the customer, and not approved by PeptideStream, will be reported to collections.</p>
+        <h2>FDA Disclaimer</h2>
+        <p>
+          Statements on this website have not been evaluated by the U.S. Food
+          and Drug Administration. Products are not intended to diagnose, treat,
+          cure, or prevent any disease.
+        </p>
 
-        <p><strong>FDA Disclaimer</strong></p>
-        <p>The statements made within this website have not been evaluated by the US Food and Drug Administration. The statements and the products of this company are not intended to diagnose, treat, cure or prevent any disease.</p>
-
-        <p><strong>Research Use Only</strong></p>
-        <p>All products are for laboratory developmental research USE ONLY. Products are not for human consumption.</p>
+        <h2>Research Use Only</h2>
+        <p>
+          All Products are for laboratory developmental research USE ONLY and
+          are not for human consumption, medical, diagnostic, veterinary, or
+          household use.
+        </p>
       </div>
     </main>
   )
