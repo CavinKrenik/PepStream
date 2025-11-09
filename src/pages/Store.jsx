@@ -3,32 +3,57 @@ import { PRODUCTS } from '../data/products'
 import ProductCard from '../components/ProductCard'
 
 export default function Store() {
+  // Track quantity per product
   const [qty, setQty] = useState(() =>
     Object.fromEntries(PRODUCTS.map(p => [p.id, 0]))
   )
 
-  const subtotal = useMemo(
-    () => PRODUCTS.reduce((sum, p) => sum + (qty[p.id] || 0) * p.price, 0),
-    [qty]
-  )
-  const shipping = 0
-  const grand = subtotal + shipping
+  // Helpers
   const fmt = n => '$' + n.toFixed(2)
 
+  const subtotal = useMemo(
+    () =>
+      PRODUCTS.reduce(
+        (sum, p) => sum + (qty[p.id] || 0) * p.price,
+        0
+      ),
+    [qty]
+  )
+
+  const shipping = 0
+  const grand = subtotal + shipping
+
+  // Venmo pay link (pre-fills amount + note when there is a total)
   const payHref = useMemo(() => {
-    const url = new URL('#', window.location.origin)
-    url.searchParams.set('amount', grand.toFixed(2))
-    return url.toString()
+    const base = 'https://account.venmo.com/u/Ryan-Harper-133'
+    if (grand <= 0) return base
+
+    const params = new URLSearchParams({
+      amount: grand.toFixed(2),
+      note: 'PeptideStream Order - Research Use Only'
+    })
+
+    return `${base}?${params.toString()}`
   }, [grand])
 
-  const inc = id => setQty(q => ({ ...q, [id]: (q[id] || 0) + 1 }))
-  const dec = id => setQty(q => ({ ...q, [id]: Math.max(0, (q[id] || 0) - 1) }))
+  const inc = id =>
+    setQty(prev => ({
+      ...prev,
+      [id]: (prev[id] || 0) + 1
+    }))
+
+  const dec = id =>
+    setQty(prev => ({
+      ...prev,
+      [id]: Math.max(0, (prev[id] || 0) - 1)
+    }))
 
   async function handleSubmit(e) {
     e.preventDefault()
 
     const form = e.currentTarget
     const agree = form.querySelector('#agree')?.checked
+
     if (!agree) {
       alert(
         'You must confirm research use only and agreement to the Terms & Conditions of Sale.'
@@ -36,8 +61,10 @@ export default function Store() {
       return
     }
 
-    const phone = document.getElementById('phone')?.value?.trim() || ''
-    const address = document.getElementById('address')?.value?.trim() || ''
+    const phone =
+      document.getElementById('phone')?.value?.trim() || ''
+    const address =
+      document.getElementById('address')?.value?.trim() || ''
 
     const items = PRODUCTS
       .filter(p => (qty[p.id] || 0) > 0)
@@ -45,14 +72,15 @@ export default function Store() {
         title: p.title,
         price: p.price,
         qty: qty[p.id],
-        line: p.price * qty[p.id],
+        line: p.price * qty[p.id]
       }))
 
     if (!items.length) {
-      alert('Please add at least one product quantity before submitting.')
+      alert('Please add at least one product before submitting.')
       return
     }
 
+    // Build order summary for email
     const lines = []
     lines.push('PeptideStream Order')
     lines.push('-------------------')
@@ -61,13 +89,13 @@ export default function Store() {
     lines.push(address)
     lines.push('')
     lines.push('Items:')
-    items.forEach(i =>
+    items.forEach(i => {
       lines.push(
-        `- ${i.title} x ${i.qty} @ $${i.price.toFixed(2)} = $${i.line.toFixed(
+        `- ${i.title} x ${i.qty} @ $${i.price.toFixed(
           2
-        )}`
+        )} = $${i.line.toFixed(2)}`
       )
-    )
+    })
     lines.push('')
     lines.push(`Subtotal: ${fmt(subtotal)}`)
     lines.push(`Shipping: ${fmt(shipping)}`)
@@ -80,36 +108,28 @@ export default function Store() {
     const recipient = 'ryanharper38@gmail.com'
     const subject = encodeURIComponent('New PeptideStream Order')
     const body = encodeURIComponent(lines.join('\n'))
-    const href = `mailto:${encodeURIComponent(
+    const mailto = `mailto:${encodeURIComponent(
       recipient
     )}?subject=${subject}&body=${body}`
 
+    // Open default mail client
     const a = document.createElement('a')
-    a.href = href
+    a.href = mailto
     a.style.display = 'none'
     document.body.appendChild(a)
     a.click()
+    document.body.removeChild(a)
 
+    // Try to copy summary for safety
     try {
       await navigator.clipboard.writeText(lines.join('\n'))
-    } catch (_) {}
+    } catch (_) {
+      // ignore if not available
+    }
 
-    setTimeout(() => {
-      const ok = confirm(
-        `If your email app did not open, click OK to copy your order and send it to ${recipient}.`
-      )
-      if (ok) {
-        try {
-          navigator.clipboard.writeText(lines.join('\n'))
-          alert(`Order copied. Paste into an email to ${recipient}.`)
-        } catch (err) {
-          window.prompt(
-            `Copy your order and email to ${recipient}:`,
-            lines.join('\n')
-          )
-        }
-      }
-    }, 400)
+    alert(
+      'Order summary prepared. If your email app did not open automatically, please paste the copied summary into an email to ryanharper38@gmail.com.'
+    )
   }
 
   return (
@@ -180,7 +200,7 @@ export default function Store() {
             gap: 8,
             fontSize: 12,
             color: 'var(--muted)',
-            marginTop: 12,
+            marginTop: 12
           }}
         >
           <input
@@ -190,8 +210,8 @@ export default function Store() {
             style={{ marginTop: 2 }}
           />
           <span>
-            I confirm I am 21+ and purchasing solely for lawful laboratory
-            research use, and I agree to the{' '}
+            I confirm I am 21+ and purchasing solely for lawful
+            laboratory research use, and I agree to the{' '}
             <a
               href="/terms"
               target="_blank"
@@ -206,19 +226,29 @@ export default function Store() {
         <div className="actions">
           <a
             className="btn pay"
-            href={payHref}
+            href={grand > 0 ? payHref : '#'}
             id="payNowBtn"
+            target="_blank"
             rel="noopener"
             aria-disabled={grand <= 0}
+            onClick={e => {
+              if (grand <= 0) {
+                e.preventDefault()
+                alert(
+                  'Add at least one product to enable Venmo payment.'
+                )
+              }
+            }}
           >
-            Pay Now - Coming Soon
+            Pay Now with Venmo
           </a>
+
           <button
             type="submit"
             className="btn pay"
             style={{
               background:
-                'linear-gradient(135deg,#10b981,#059669)',
+                'linear-gradient(135deg,#10b981,#059669)'
             }}
           >
             Submit Order via Email
@@ -228,9 +258,10 @@ export default function Store() {
 
       <section className="info">
         <p className="global-disclaimer">
-          All products are for laboratory research-use only. Not for
-          human consumption, nor medical, veterinary, or household uses.
-          See <a href="/terms">Terms &amp; Conditions</a>.
+          All products are for laboratory research-use only. Not
+          for human consumption, nor medical, veterinary, or
+          household uses. See{' '}
+          <a href="/terms">Terms &amp; Conditions</a>.
         </p>
       </section>
     </main>
