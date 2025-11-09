@@ -8,9 +8,9 @@ export default function Store() {
     Object.fromEntries(PRODUCTS.map(p => [p.id, 0]))
   )
 
-  // Helpers
   const fmt = n => '$' + n.toFixed(2)
 
+  // Subtotal from items
   const subtotal = useMemo(
     () =>
       PRODUCTS.reduce(
@@ -20,10 +20,18 @@ export default function Store() {
     [qty]
   )
 
-  const shipping = 0
+  // Shipping:
+  // > $150 = free
+  // > $0 and <= $150 = $15
+  // 0 subtotal = $0
+  const shipping = useMemo(() => {
+    if (subtotal === 0) return 0
+    return subtotal > 150 ? 0 : 15
+  }, [subtotal])
+
   const grand = subtotal + shipping
 
-  // Venmo pay link (pre-fills amount + note when there is a total)
+  // Venmo pay link (uses grand total incl. shipping)
   const payHref = useMemo(() => {
     const base = 'https://account.venmo.com/u/Ryan-Harper-133'
     if (grand <= 0) return base
