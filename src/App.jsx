@@ -21,10 +21,18 @@ export default function App() {
       </header>
 
       {showBanner && (
-        <div className="banner">
-          <img src="/assets/ad.png" alt="Promo Banner" />
-        </div>
-      )}
+  <>
+    <div className="promo-bar">
+      <div className="promo-scroll">
+        Orders over $150 ship FREE. Orders under $150 incur a flat $15 shipping fee.
+      </div>
+    </div>
+    <div className="banner">
+      <img src="/assets/ad.png" alt="Promo Banner" />
+    </div>
+  </>
+)}
+
 
       <Outlet />
 
