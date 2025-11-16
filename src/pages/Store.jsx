@@ -33,7 +33,7 @@ export default function Store() {
 
   // Venmo pay link (uses grand total incl. shipping)
   const payHref = useMemo(() => {
-    const base = 'https://account.venmo.com/u/Ryan-Harper-133'
+    const base = 'https://account.venmo.com/u/Ryanharper38'
     if (grand <= 0) return base
 
     const params = new URLSearchParams({
@@ -113,7 +113,7 @@ export default function Store() {
       'I confirm I am 21+ and purchasing for lawful laboratory research use only. I agree to the Terms & Conditions of Sale.'
     )
 
-    const recipient = 'ryanharper38@gmail.com'
+    const recipient = 'peptidestream@gmail.com'
     const subject = encodeURIComponent('New PeptideStream Order')
     const body = encodeURIComponent(lines.join('\n'))
     const mailto = `mailto:${encodeURIComponent(
