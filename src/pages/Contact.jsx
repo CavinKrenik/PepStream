@@ -24,7 +24,7 @@ export default function Contact() {
     lines.push('Message:')
     lines.push(message)
 
-    const recipient = 'ryanharper38@gmail.com'
+    const recipient = 'peptidestream@gmail.com'
     const subject = encodeURIComponent('PeptideStream Contact')
     const body = encodeURIComponent(lines.join('\n'))
     const href = `mailto:${encodeURIComponent(

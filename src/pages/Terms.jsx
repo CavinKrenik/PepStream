@@ -218,7 +218,7 @@ export default function Terms() {
           fraud prevention, and legal compliance. While reasonable safeguards
           are implemented, no system is completely secure. You may request
           access, correction, or deletion of your data by contacting
-          ryanharper38@gmail.com. Applicable data protection laws, including
+          peptidestream@gmail.com. Applicable data protection laws, including
           GDPR and CCPA where relevant, will be observed.
         </p>
 
@@ -260,8 +260,8 @@ export default function Terms() {
         <p>
           Notices to PeptideStream shall be sent to
           {' '}
-          <a href="mailto:ryanharper38@gmail.com">
-            ryanharper38@gmail.com
+          <a href="mailto:peptidestream@gmail.com">
+            peptidestream@gmail.com
           </a>
           .
           Notices to you may be sent to the email or address provided with your
