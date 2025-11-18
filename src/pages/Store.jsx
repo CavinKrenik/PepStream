@@ -180,7 +180,9 @@ export default function Store() {
         <br />
         For questions or help at any time, contact us at{' '}
         <span style={{ color: 'var(--accent)' }}>
-          peptidestream@gmail.com
+          <a href="mailto:peptidestream@gmail.com" style={{ color: 'var(--accent)' }}>
+            peptidestream@gmail.com
+          </a>
         </span>
         .
       </div>
