@@ -136,7 +136,7 @@ export default function Store() {
     }
 
     alert(
-      'Order summary prepared. If your email app did not open automatically, please paste the copied summary into an email to ryanharper38@gmail.com.'
+      'Order summary prepared. If your email app did not open automatically, please paste the copied summary into an email to peptidestream@gmail.com.'
     )
   }
 
@@ -146,6 +146,45 @@ export default function Store() {
       <p className="tagline">
         Laboratory research-use only. Not for human consumption.
       </p>
+
+      {/* ⬇️ NEW EXPLANATION BLOCK GOES HERE */}
+      <div
+        className="notice-card"
+        style={{
+          margin: '12px 0 18px',
+          padding: '14px 18px',
+          background: 'rgba(15,23,42,0.6)',
+          border: '1px solid var(--line)',
+          borderRadius: '12px',
+          fontSize: '14px',
+          lineHeight: 1.5,
+          color: 'var(--muted)'
+        }}
+      >
+        <strong style={{ color: 'var(--text)' }}>
+          Why We Use Email Ordering & Payment Links
+        </strong>
+        <br />
+        <br />
+        Due to current U.S. banking and processor restrictions on
+        peptide-based research materials, PeptideStream cannot
+        offer direct credit or debit card checkout at this time.
+        To stay compliant, all orders are first submitted through
+        our email order system.
+        <br />
+        <br />
+        After we receive your order, we will email you with
+        approved payment options and a secure link to pay your
+        total.
+        <br />
+        <br />
+        For questions or help at any time, contact us at{' '}
+        <span style={{ color: 'var(--accent)' }}>
+          peptidestream@gmail.com
+        </span>
+        .
+      </div>
+      {/* ⬆️ END NEW BLOCK */}
 
       <form className="card" onSubmit={handleSubmit}>
         <h2>Order Form</h2>
