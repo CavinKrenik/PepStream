@@ -2,7 +2,7 @@ export const PRODUCTS = [
   {
     id: 'retatrutide10',
     title: 'Retatrutide 10mg',
-    price: 265.00,
+    price: 95.00,
     img: '/assets/Retatrutide.JPG',
     coa: '/assets/RetatrutideCertofAnalysis.jpg',
     badge: 'Eligible for Free Shipping',
@@ -14,7 +14,7 @@ export const PRODUCTS = [
   {
     id: 'retatrutide20',
     title: 'Retatrutide 20mg',
-    price: 365.00,
+    price: 150.00,
     img: '/assets/placeholder.png',
     coa: '/assets/RetatrutideCertofAnalysis.jpg',
     badge: 'Eligible for Free Shipping',
@@ -26,7 +26,7 @@ export const PRODUCTS = [
   {
     id: 'tesamorelin',
     title: 'Tesamorelin 10mg',
-    price: 285.00,
+    price: 75.00,
     img: '/assets/placeholder.png',
     coa: null,
     badge: 'Eligible for Free Shipping',
@@ -38,7 +38,7 @@ export const PRODUCTS = [
   {
     id: 'ghkcu',
     title: 'GHK-Cu 50mg',
-    price: 95.00,
+    price: 40.00,
     img: '/assets/GHK-CU.jpg',
     coa: '/assets/GHK-CUCertofAnalysis.jpg',
     badge: 'Eligible for Free Shipping',
@@ -51,8 +51,8 @@ export const PRODUCTS = [
   /* --- UNAVAILABLE ITEM --- */
   {
     id: 'nad',
-    title: 'NAD+ (Currently Unavailable)',
-    price: 0,
+    title: 'NAD+ 500 mg)',
+    price: 60.00,
     unavailable: true,
     img: '/assets/placeholder.png',
     coa: null,
@@ -66,7 +66,7 @@ export const PRODUCTS = [
   {
     id: 'bpc_tb',
     title: 'BPC/TB Blend 10mg',
-    price: 175.00,
+    price: 45.00,
     img: '/assets/placeholder.png',
     coa: null,
     badge: 'Eligible for Free Shipping',
@@ -78,7 +78,7 @@ export const PRODUCTS = [
   {
     id: 'mt2',
     title: 'Melanotan 2 (MT2) 10mg',
-    price: 105.00,
+    price: 45.00,
     img: '/assets/placeholder.png',
     coa: null,
     badge: 'Eligible for Free Shipping',
@@ -95,7 +95,7 @@ export const PRODUCTS = [
     price: 120.00,
     img: '/assets/placeholder.png',
     coa: null,
-    badge: 'Import Stock — 10–15 Day Wait',
+    badge: 'Import Stock — Out of Stock',
     details:
       'PT-141 (bremelanotide) is a melanocortin receptor agonist studied for its effects on neural pathways related to arousal and behavioral research.',
     disclaimer:
@@ -104,7 +104,7 @@ export const PRODUCTS = [
   {
     id: 'ipacjc',
     title: 'IPA-CJC Blend 10mg (Import)',
-    price: 145.00,
+    price: 85.00,
     img: '/assets/placeholder.png',
     coa: null,
     badge: 'Import Stock — 10–15 Day Wait',
@@ -115,22 +115,11 @@ export const PRODUCTS = [
   },
 
   /* --- HIGH DEMAND --- */
-  {
-    id: 'kpv',
-    title: 'KPV 10mg (Import Stock)',
-    price: 120.00,
-    img: '/assets/placeholder.png',
-    coa: null,
-    badge: 'High Demand — Import Stock',
-    details:
-      'KPV is a tripeptide fragment (Lys-Pro-Val) studied for anti-inflammatory pathways, immune signaling, and gastrointestinal research applications.',
-    disclaimer:
-      'For laboratory research use only. Not for human consumption or use in medical, veterinary, or household applications. All sales are subject to our Terms & Conditions of Sale.'
-  },
+
   {
     id: 'glowstack',
     title: 'Glow Stack 70mg (US Stock)',
-    price: 280.00,
+    price: 75.00,
     img: '/assets/placeholder.png',
     coa: null,
     badge: 'US Stock — Limited Supply',
