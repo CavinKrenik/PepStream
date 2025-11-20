@@ -51,7 +51,7 @@ export const PRODUCTS = [
   /* --- UNAVAILABLE ITEM --- */
   {
     id: 'nad',
-    title: 'NAD+ 500 mg)',
+    title: 'NAD+ 500 mg',
     price: 60.00,
     unavailable: true,
     img: '/assets/placeholder.png',
