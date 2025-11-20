@@ -44,17 +44,24 @@ export default function Store() {
     return `${base}?${params.toString()}`
   }, [grand])
 
-  const inc = id =>
+  const inc = id => {
     setQty(prev => ({
       ...prev,
       [id]: (prev[id] || 0) + 1
     }))
+    setEmailSubmitted(false)
+  }
 
-  const dec = id =>
+  const dec = id => {
     setQty(prev => ({
       ...prev,
       [id]: Math.max(0, (prev[id] || 0) - 1)
     }))
+    setEmailSubmitted(false)
+  }
+
+  // Track whether the user has submitted the order via email
+  const [emailSubmitted, setEmailSubmitted] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -135,8 +142,11 @@ export default function Store() {
       // ignore if not available
     }
 
+    // Mark that the user submitted via email (enables Venmo)
+    setEmailSubmitted(true)
+
     alert(
-      'Order summary prepared. If your email app did not open automatically, please paste the copied summary into an email to peptidestream@gmail.com.'
+      'Order summary prepared. If your email app did not open automatically, please paste the copied summary into an email to peptidestream@gmail.com. Venmo payment will now be enabled for this order.'
     )
   }
 
@@ -273,25 +283,6 @@ export default function Store() {
         </label>
 
         <div className="actions">
-          <a
-            className="btn pay"
-            href={grand > 0 ? payHref : '#'}
-            id="payNowBtn"
-            target="_blank"
-            rel="noopener"
-            aria-disabled={grand <= 0}
-            onClick={e => {
-              if (grand <= 0) {
-                e.preventDefault()
-                alert(
-                  'Add at least one product to enable Venmo payment.'
-                )
-              }
-            }}
-          >
-            Pay Now with Venmo
-          </a>
-
           <button
             type="submit"
             className="btn pay"
@@ -302,6 +293,28 @@ export default function Store() {
           >
             Submit Order via Email
           </button>
+
+          <a
+            className="btn pay"
+            href={grand > 0 && emailSubmitted ? payHref : '#'}
+            id="payNowBtn"
+            target="_blank"
+            rel="noopener"
+            aria-disabled={grand <= 0 || !emailSubmitted}
+            onClick={e => {
+              if (grand <= 0) {
+                e.preventDefault()
+                alert('Add at least one product to enable Venmo payment.')
+                return
+              }
+              if (!emailSubmitted) {
+                e.preventDefault()
+                alert('Please submit your order via email first. After submitting, you can use the Venmo pay link.')
+              }
+            }}
+          >
+            {emailSubmitted ? 'Pay Now with Venmo' : 'Pay Now with Venmo (submit order via email first)'}
+          </a>
         </div>
       </form>
 
