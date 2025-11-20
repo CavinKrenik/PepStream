@@ -56,7 +56,7 @@ export const PRODUCTS = [
     unavailable: true,
     img: '/assets/placeholder.png',
     coa: null,
-    badge: 'Out of Stock',
+    badge: 'In Stock',
     details:
       'Nicotinamide adenine dinucleotide (NAD+) is researched extensively in cellular metabolism, mitochondrial function, and aging-related studies.',
     disclaimer:
