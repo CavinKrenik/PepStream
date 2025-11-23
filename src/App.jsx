@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
+import Footer from './components/Footer.jsx'
 
 export default function App() {
   const location = useLocation()
@@ -35,24 +36,7 @@ export default function App() {
 
       <Outlet />
 
-      <footer className="site-footer">
-        <p>
-          © {new Date().getFullYear()} PeptideStream. All products are for
-          laboratory research use only. Not for human consumption.
-        </p>
-
-        <nav style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '6px' }}>
-          <Link to="/terms">Terms &amp; Conditions</Link>
-          <span>·</span>
-          <Link to="/privacy">Privacy Policy</Link>
-          <span>·</span>
-          <Link to="/refund">Refund Policy</Link>
-          <span>·</span>
-          <Link to="/contact">Contact</Link>
-          <span>·</span>
-          <Link to="/disclaimer">Research Use Only</Link>
-        </nav>
-      </footer>
+      <Footer />
     </>
   )
 }

@@ -8,7 +8,7 @@ export default function Footer() {
         © {new Date().getFullYear()} PeptideStream. All products are for
         laboratory research use only. Not for human consumption.
       </p>
-      <nav className="footer-nav" style={{ display: 'flex', justifyContent: 'center', gap: 8, flexWrap: 'wrap' }}>
+      <nav className="footer-nav" aria-label="Footer navigation">
         <Link to="/terms">Terms &amp; Conditions</Link>
         <span>·</span>
         <Link to="/privacy">Privacy Policy</Link>

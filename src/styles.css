@@ -304,6 +304,21 @@ textarea {
   font-size: 12px;
 }
 
+.footer-nav{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin-top:8px;
+}
+.footer-nav a{
+  color:var(--accent);
+  text-decoration:none;
+}
+.footer-nav a:hover{ text-decoration:underline; }
+.footer-nav span{ color:var(--muted); }
+
 /* ========== GRID ON DESKTOP ========== */
 
 @media (min-width: 768px) {
