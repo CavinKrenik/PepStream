@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react'
+import { loadStripe } from '@stripe/stripe-js'
 import { PRODUCTS } from '../data/products'
 import ProductCard from '../components/ProductCard'
 
@@ -62,8 +63,8 @@ export default function Store() {
 
   // Track whether the user has submitted the order via email
   const [emailSubmitted, setEmailSubmitted] = useState(false)
-  // Stripe Checkout session URL returned by the server
-  const [stripeSessionUrl, setStripeSessionUrl] = useState(null)
+  // Stripe client promise
+  const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -78,12 +79,14 @@ export default function Store() {
       return
     }
 
+    const name =
+      document.getElementById('name')?.value?.trim() || ''
     const phone =
       document.getElementById('phone')?.value?.trim() || ''
     const address =
       document.getElementById('address')?.value?.trim() || ''
-      const email =
-        document.getElementById('email')?.value?.trim() || ''
+    const email =
+      document.getElementById('email')?.value?.trim() || ''
 
     const items = PRODUCTS
       .filter(p => (qty[p.id] || 0) > 0)
@@ -146,21 +149,8 @@ export default function Store() {
       // ignore if not available
     }
 
-      // Create a Stripe Checkout Session on the server so we can redirect the user
-      // to a secure hosted checkout that is pre-filled with their order total.
-      try {
-        const resp = await fetch('/api/create-checkout-session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ items, customerEmail: email, metadata: { source: 'email-order' } }),
-        })
-        const data = await resp.json()
-        if (data && data.url) {
-          setStripeSessionUrl(data.url)
-        }
-      } catch (err) {
-        console.error('create-checkout-session failed', err)
-      }
+      // (email order flow only) — we do not create a Stripe session here; card
+      // payments are started via the separate Pay button which calls Stripe.js.
 
       // Mark that the user submitted via email (enables Pay button)
       setEmailSubmitted(true)
@@ -220,6 +210,17 @@ export default function Store() {
 
       <form className="card" onSubmit={handleSubmit}>
         <h2>Order Form</h2>
+
+        <div className="field-row">
+          <label htmlFor="name">Full Name</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            placeholder="Jane Doe"
+            required
+          />
+        </div>
 
         <div className="field-row">
           <label htmlFor="phone">Phone</label>
@@ -309,6 +310,57 @@ export default function Store() {
 
         <div className="actions">
           <button
+            type="button"
+            className="btn pay"
+            disabled={grand <= 0 || !emailSubmitted}
+            onClick={async () => {
+              if (grand <= 0) {
+                alert('Add at least one product to enable card payment.')
+                return
+              }
+              if (!emailSubmitted) {
+                alert('Please submit your order via email first.')
+                return
+              }
+
+              const payloadItems = PRODUCTS.map(p => ({
+                id: p.id,
+                title: p.title,
+                price: p.price,
+                qty: qty[p.id] || 0,
+              })).filter(i => i.qty > 0)
+
+              if (!payloadItems.length) {
+                alert('Please add at least one product before paying.')
+                return
+              }
+
+              try {
+                const stripe = await stripePromise
+                const res = await fetch('/.netlify/functions/create-checkout-session', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ items: payloadItems, shipping }),
+                })
+                const data = await res.json()
+                if (!res.ok || data.error) {
+                  console.error(data.error)
+                  alert('Error creating Stripe checkout session.')
+                  return
+                }
+
+                const { error } = await stripe.redirectToCheckout({ sessionId: data.id })
+                if (error) alert(error.message)
+              } catch (err) {
+                console.error('Stripe payment error', err)
+                alert('Unexpected error starting payment.')
+              }
+            }}
+          >
+            Pay with Card (Stripe)
+          </button>
+
+          <button
             type="submit"
             className="btn pay"
             style={{
@@ -318,40 +370,6 @@ export default function Store() {
           >
             Submit Order via Email
           </button>
-
-          <a
-            className="btn pay"
-            href={
-              stripeSessionUrl
-                ? stripeSessionUrl
-                : grand > 0 && emailSubmitted
-                ? payHref
-                : '#'
-            }
-            id="payNowBtn"
-            target="_blank"
-            rel="noopener"
-            aria-disabled={grand <= 0 || !emailSubmitted}
-            onClick={e => {
-              if (grand <= 0) {
-                e.preventDefault()
-                alert('Add at least one product to enable payment.')
-                return
-              }
-              if (!emailSubmitted) {
-                e.preventDefault()
-                alert('Please submit your order via email first. After submitting, you can use the payment link.')
-                return
-              }
-              if (!stripeSessionUrl) {
-                // fallback to Venmo behavior (user must enter amount manually)
-                const ok = confirm('No card checkout link available — continue to Venmo where you must enter the amount manually?')
-                if (!ok) e.preventDefault()
-              }
-            }}
-          >
-            {stripeSessionUrl ? 'Pay Now (Card)' : emailSubmitted ? 'Pay Now with Venmo' : 'Pay Now (submit order via email first)'}
-          </a>
         </div>
       </form>
 
