@@ -21,10 +21,7 @@ export default function Store() {
     [qty]
   )
 
-  // Shipping:
-  // > $150 = free
-  // > $0 and <= $150 = $15
-  // 0 subtotal = $0
+  // Shipping rules
   const shipping = useMemo(() => {
     if (subtotal === 0) return 0
     return subtotal > 150 ? 0 : 15
@@ -32,7 +29,7 @@ export default function Store() {
 
   const grand = subtotal + shipping
 
-  // Venmo pay link (uses grand total incl. shipping)
+  // Venmo payment link
   const payHref = useMemo(() => {
     const base = 'https://account.venmo.com/u/Ryanharper38'
     if (grand <= 0) return base
@@ -45,26 +42,19 @@ export default function Store() {
     return `${base}?${params.toString()}`
   }, [grand])
 
+  const [emailSubmitted, setEmailSubmitted] = useState(false)
+
+  const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
+
   const inc = id => {
-    setQty(prev => ({
-      ...prev,
-      [id]: (prev[id] || 0) + 1
-    }))
+    setQty(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }))
     setEmailSubmitted(false)
   }
 
   const dec = id => {
-    setQty(prev => ({
-      ...prev,
-      [id]: Math.max(0, (prev[id] || 0) - 1)
-    }))
+    setQty(prev => ({ ...prev, [id]: Math.max(0, (prev[id] || 0) - 1) }))
     setEmailSubmitted(false)
   }
-
-  // Track whether the user has submitted the order via email
-  const [emailSubmitted, setEmailSubmitted] = useState(false)
-  // Stripe client promise
-  const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -79,14 +69,10 @@ export default function Store() {
       return
     }
 
-    const name =
-      document.getElementById('name')?.value?.trim() || ''
-    const phone =
-      document.getElementById('phone')?.value?.trim() || ''
-    const address =
-      document.getElementById('address')?.value?.trim() || ''
-    const email =
-      document.getElementById('email')?.value?.trim() || ''
+    const name = document.getElementById('name')?.value?.trim() || ''
+    const phone = document.getElementById('phone')?.value?.trim() || ''
+    const address = document.getElementById('address')?.value?.trim() || ''
+    const email = document.getElementById('email')?.value?.trim() || ''
 
     const items = PRODUCTS
       .filter(p => (qty[p.id] || 0) > 0)
@@ -102,7 +88,7 @@ export default function Store() {
       return
     }
 
-    // Build order summary for email
+    // Build order summary
     const lines = []
     lines.push('PeptideStream Order')
     lines.push('-------------------')
@@ -134,7 +120,7 @@ export default function Store() {
       recipient
     )}?subject=${subject}&body=${body}`
 
-    // Open default mail client
+    // Open email client
     const a = document.createElement('a')
     a.href = mailto
     a.style.display = 'none'
@@ -142,22 +128,15 @@ export default function Store() {
     a.click()
     document.body.removeChild(a)
 
-    // Try to copy summary for safety
     try {
       await navigator.clipboard.writeText(lines.join('\n'))
-    } catch (_) {
-      // ignore if not available
-    }
+    } catch (_) {}
 
-      // (email order flow only) — we do not create a Stripe session here; card
-      // payments are started via the separate Pay button which calls Stripe.js.
+    setEmailSubmitted(true)
 
-      // Mark that the user submitted via email (enables Pay button)
-      setEmailSubmitted(true)
-
-      alert(
-        'Order summary prepared. If your email app did not open automatically, please paste the copied summary into an email to peptidestream@gmail.com. Payment link (Stripe) will be enabled if available.'
-      )
+    alert(
+      'Order summary prepared. If your email app did not open, paste the copied summary into an email to peptidestream@gmail.com.'
+    )
   }
 
   return (
@@ -167,7 +146,7 @@ export default function Store() {
         Laboratory research-use only. Not for human consumption.
       </p>
 
-      {/* ⬇️ NEW EXPLANATION BLOCK GOES HERE */}
+      {/* EXPLANATION CARD */}
       <div
         className="notice-card"
         style={{
@@ -186,67 +165,37 @@ export default function Store() {
         </strong>
         <br />
         <br />
-        Due to current U.S. banking and processor restrictions on
-        peptide-based research materials, PeptideStream cannot
-        offer direct credit or debit card checkout at this time.
-        To stay compliant, all orders are first submitted through
-        our email order system.
+        Due to current U.S. banking restrictions on peptide-based
+        research materials, PeptideStream cannot offer direct card
+        checkout. All orders are submitted first via email.
         <br />
         <br />
-        After we receive your order, we will email you with
-        approved payment options and a secure link to pay your
-        total.
-        <br />
-        <br />
-        For questions or help at any time, contact us at{' '}
-        <span style={{ color: 'var(--accent)' }}>
-          <a href="mailto:peptidestream@gmail.com" style={{ color: 'var(--accent)' }}>
-            peptidestream@gmail.com
-          </a>
-        </span>
-        .
+        After your order is received, you will be able to pay via
+        Stripe or Venmo.
       </div>
-      {/* ⬆️ END NEW BLOCK */}
 
       <form className="card" onSubmit={handleSubmit}>
         <h2>Order Form</h2>
 
+        {/* FIELDS */}
         <div className="field-row">
           <label htmlFor="name">Full Name</label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            placeholder="Jane Doe"
-            required
-          />
+          <input id="name" name="name" type="text" required />
         </div>
 
         <div className="field-row">
           <label htmlFor="phone">Phone</label>
-          <input
-            id="phone"
-            name="phone"
-            type="tel"
-            placeholder="(555) 555-5555"
-            required
-          />
+          <input id="phone" name="phone" type="tel" required />
         </div>
 
         <div className="field-row">
           <label htmlFor="email">Email</label>
-          <input id="email" name="email" type="email" placeholder="you@example.com" required />
+          <input id="email" name="email" type="email" required />
         </div>
 
         <div className="field-row">
           <label htmlFor="address">Shipping Address</label>
-          <textarea
-            id="address"
-            name="address"
-            rows="3"
-            placeholder="Name, Street, City, State, ZIP"
-            required
-          />
+          <textarea id="address" name="address" rows="3" required />
         </div>
 
         <div className="products">
@@ -261,65 +210,59 @@ export default function Store() {
           ))}
         </div>
 
+        {/* TOTALS */}
         <div className="totals">
           <div className="line">
             <span>Subtotal</span>
-            <span id="subtotal">{fmt(subtotal)}</span>
+            <span>{fmt(subtotal)}</span>
           </div>
           <div className="line">
             <span>Shipping</span>
-            <span id="shipping">{fmt(shipping)}</span>
+            <span>{fmt(shipping)}</span>
           </div>
           <div className="line total">
             <span>Total</span>
-            <span id="grandtotal">{fmt(grand)}</span>
+            <span>{fmt(grand)}</span>
           </div>
         </div>
 
-        <label
-          htmlFor="agree"
-          className="agree-line"
-          style={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: 8,
-            fontSize: 12,
-            color: 'var(--muted)',
-            marginTop: 12
-          }}
-        >
-          <input
-            id="agree"
-            type="checkbox"
-            required
-            style={{ marginTop: 2 }}
-          />
+        {/* AGREEMENT CHECKBOX */}
+        <label className="agree-line" style={{ marginTop: 12 }}>
+          <input id="agree" type="checkbox" required />
           <span>
             I confirm I am 21+ and purchasing solely for lawful
-            laboratory research use, and I agree to the{' '}
-            <a
-              href="/terms"
-              target="_blank"
-              className="underline"
-            >
-              Terms &amp; Conditions of Sale
+            laboratory research use. I agree to the{' '}
+            <a href="/terms" target="_blank">
+              Terms & Conditions of Sale
             </a>
             .
           </span>
         </label>
 
+        {/* BUTTON ORDER FIXED */}
         <div className="actions">
+
+          {/* FIRST: Submit via Email */}
+          <button
+            type="submit"
+            className="btn"
+            style={{
+              background: 'linear-gradient(135deg,#10b981,#059669)'
+            }}
+          >
+            Submit Order via Email
+          </button>
+
+          {/* SECOND: Stripe */}
           <button
             type="button"
             className="btn pay"
             disabled={grand <= 0 || !emailSubmitted}
             onClick={async () => {
-              if (grand <= 0) {
-                alert('Add at least one product to enable card payment.')
-                return
-              }
               if (!emailSubmitted) {
-                alert('Please submit your order via email first.')
+                alert(
+                  'Please submit your order via email first.'
+                )
                 return
               }
 
@@ -327,32 +270,33 @@ export default function Store() {
                 id: p.id,
                 title: p.title,
                 price: p.price,
-                qty: qty[p.id] || 0,
+                qty: qty[p.id] || 0
               })).filter(i => i.qty > 0)
-
-              if (!payloadItems.length) {
-                alert('Please add at least one product before paying.')
-                return
-              }
 
               try {
                 const stripe = await stripePromise
-                const res = await fetch('/.netlify/functions/create-checkout-session', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ items: payloadItems, shipping }),
-                })
+                const res = await fetch(
+                  '/.netlify/functions/create-checkout-session',
+                  {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      items: payloadItems,
+                      shipping
+                    })
+                  }
+                )
                 const data = await res.json()
+
                 if (!res.ok || data.error) {
-                  console.error(data.error)
                   alert('Error creating Stripe checkout session.')
                   return
                 }
 
-                const { error } = await stripe.redirectToCheckout({ sessionId: data.id })
-                if (error) alert(error.message)
+                await stripe.redirectToCheckout({
+                  sessionId: data.id
+                })
               } catch (err) {
-                console.error('Stripe payment error', err)
                 alert('Unexpected error starting payment.')
               }
             }}
@@ -360,27 +304,31 @@ export default function Store() {
             Pay with Card (Stripe)
           </button>
 
+          {/* THIRD: Venmo */}
           <button
-            type="submit"
-            className="btn pay"
+            type="button"
+            className="btn"
+            disabled={grand <= 0 || !emailSubmitted}
+            onClick={() => {
+              if (!emailSubmitted) {
+                alert(
+                  'Please submit your order via email first.'
+                )
+                return
+              }
+              window.open(payHref, '_blank')
+            }}
             style={{
-              background:
-                'linear-gradient(135deg,#10b981,#059669)'
+              marginTop: 8,
+              background: '#3d95ce',
+              color: 'white',
+              fontWeight: 600
             }}
           >
-            Submit Order via Email
+            Pay with Venmo @ryanharper38
           </button>
         </div>
       </form>
-
-      <section className="info">
-        <p className="global-disclaimer">
-          All products are for laboratory research-use only. Not
-          for human consumption, nor medical, veterinary, or
-          household uses. See{' '}
-          <a href="/terms">Terms &amp; Conditions</a>.
-        </p>
-      </section>
     </main>
   )
 }
