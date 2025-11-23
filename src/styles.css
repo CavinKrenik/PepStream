@@ -305,19 +305,35 @@ textarea {
 }
 
 .footer-nav{
+  margin-top:8px;
+}
+.footer-nav ul{
+  list-style:none;
+  padding:0;
+  margin:0;
   display:flex;
-  justify-content:center;
   gap:8px;
+  justify-content:center;
   flex-wrap:wrap;
   align-items:center;
-  margin-top:8px;
+}
+.footer-nav li{ margin:0; }
+.footer-nav li + li::before{
+  content: '·';
+  margin: 0 8px;
+  color: var(--muted);
 }
 .footer-nav a{
   color:var(--accent);
   text-decoration:none;
 }
-.footer-nav a:hover{ text-decoration:underline; }
-.footer-nav span{ color:var(--muted); }
+.footer-nav a:hover,
+.footer-nav a:focus{
+  text-decoration:underline;
+  outline: 2px solid transparent;
+  outline-offset: 3px;
+}
+.footer-nav a:focus{ box-shadow: 0 0 0 3px rgba(56,189,248,0.12); }
 
 /* ========== GRID ON DESKTOP ========== */
 
