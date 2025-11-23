@@ -132,7 +132,7 @@ export const PRODUCTS = [
 
   {
     id: 'glowstack',
-    title: 'Glow Stack 70mg (US Stock)',
+    title: 'Glow Stack 70mg',
     price: 75.00,
     img: '/assets/placeholder.png',
     coa: null,
