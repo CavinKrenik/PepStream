@@ -62,6 +62,8 @@ export default function Store() {
 
   // Track whether the user has submitted the order via email
   const [emailSubmitted, setEmailSubmitted] = useState(false)
+  // Stripe Checkout session URL returned by the server
+  const [stripeSessionUrl, setStripeSessionUrl] = useState(null)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -80,6 +82,8 @@ export default function Store() {
       document.getElementById('phone')?.value?.trim() || ''
     const address =
       document.getElementById('address')?.value?.trim() || ''
+      const email =
+        document.getElementById('email')?.value?.trim() || ''
 
     const items = PRODUCTS
       .filter(p => (qty[p.id] || 0) > 0)
@@ -142,12 +146,28 @@ export default function Store() {
       // ignore if not available
     }
 
-    // Mark that the user submitted via email (enables Venmo)
-    setEmailSubmitted(true)
+      // Create a Stripe Checkout Session on the server so we can redirect the user
+      // to a secure hosted checkout that is pre-filled with their order total.
+      try {
+        const resp = await fetch('/api/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items, customerEmail: email, metadata: { source: 'email-order' } }),
+        })
+        const data = await resp.json()
+        if (data && data.url) {
+          setStripeSessionUrl(data.url)
+        }
+      } catch (err) {
+        console.error('create-checkout-session failed', err)
+      }
 
-    alert(
-      'Order summary prepared. If your email app did not open automatically, please paste the copied summary into an email to peptidestream@gmail.com. Venmo payment will now be enabled for this order.'
-    )
+      // Mark that the user submitted via email (enables Pay button)
+      setEmailSubmitted(true)
+
+      alert(
+        'Order summary prepared. If your email app did not open automatically, please paste the copied summary into an email to peptidestream@gmail.com. Payment link (Stripe) will be enabled if available.'
+      )
   }
 
   return (
@@ -210,6 +230,11 @@ export default function Store() {
             placeholder="(555) 555-5555"
             required
           />
+        </div>
+
+        <div className="field-row">
+          <label htmlFor="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="you@example.com" required />
         </div>
 
         <div className="field-row">
@@ -296,7 +321,13 @@ export default function Store() {
 
           <a
             className="btn pay"
-            href={grand > 0 && emailSubmitted ? payHref : '#'}
+            href={
+              stripeSessionUrl
+                ? stripeSessionUrl
+                : grand > 0 && emailSubmitted
+                ? payHref
+                : '#'
+            }
             id="payNowBtn"
             target="_blank"
             rel="noopener"
@@ -304,16 +335,22 @@ export default function Store() {
             onClick={e => {
               if (grand <= 0) {
                 e.preventDefault()
-                alert('Add at least one product to enable Venmo payment.')
+                alert('Add at least one product to enable payment.')
                 return
               }
               if (!emailSubmitted) {
                 e.preventDefault()
-                alert('Please submit your order via email first. After submitting, you can use the Venmo pay link.')
+                alert('Please submit your order via email first. After submitting, you can use the payment link.')
+                return
+              }
+              if (!stripeSessionUrl) {
+                // fallback to Venmo behavior (user must enter amount manually)
+                const ok = confirm('No card checkout link available — continue to Venmo where you must enter the amount manually?')
+                if (!ok) e.preventDefault()
               }
             }}
           >
-            {emailSubmitted ? 'Pay Now with Venmo' : 'Pay Now with Venmo (submit order via email first)'}
+            {stripeSessionUrl ? 'Pay Now (Card)' : emailSubmitted ? 'Pay Now with Venmo' : 'Pay Now (submit order via email first)'}
           </a>
         </div>
       </form>
