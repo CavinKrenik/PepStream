@@ -41,7 +41,7 @@ export const PRODUCTS = [
     id: 'tesamorelin',
     title: 'Tesamorelin 10mg',
     price: 75.00,
-    img: '/assets/placeholder.png',
+    img: '/assets/tesa.jpg',
     coa: null,
     badge: 'Eligible for Free Shipping',
     details:
