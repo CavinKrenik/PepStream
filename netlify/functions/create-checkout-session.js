@@ -50,7 +50,8 @@ exports.handler = async (event) => {
       };
     }
 
-    const origin = event.headers.origin || `https://${event.headers.host}`;
+    // Prefer an explicit FRONTEND_URL environment variable (e.g. https://www.peptidestream.com)
+    const origin = process.env.FRONTEND_URL || event.headers.origin || `https://${event.headers.host}`;
 
     // Attach helpful metadata so you can fulfill the order from the webhook
     const metadata = {
