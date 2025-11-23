@@ -4,6 +4,7 @@ export default function Terms() {
   return (
     <main className="container">
       <h1 className="title">Terms &amp; Conditions for PeptideStream</h1>
+      <p className="tagline">Last updated: 2025</p>
 
       <div className="card" style={{ marginTop: 12, lineHeight: 1.6 }}>
         <h2>Acceptance of Terms</h2>
