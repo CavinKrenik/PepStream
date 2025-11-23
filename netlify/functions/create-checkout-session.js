@@ -18,9 +18,9 @@ exports.handler = async (event) => {
 
   try {
     const payload = JSON.parse(event.body || '{}');
-    const { items, shipping } = payload;
+    const { items, shipping, customer, researchUseConfirmed } = payload;
 
-    // Validate items
+    // Basic validation
     if (!Array.isArray(items) || items.length === 0) {
       return {
         statusCode: 400,
@@ -41,7 +41,8 @@ exports.handler = async (event) => {
         price_data: {
           currency: 'usd',
           product_data: {
-            name: item.title || 'Peptide',
+            // Keep product names factual, no dosing/instructions
+            name: item.title || 'Research peptide',
           },
           unit_amount: priceInCents,
         },
@@ -49,20 +50,31 @@ exports.handler = async (event) => {
       };
     });
 
-    // Add shipping as its own line item (shipping is a number from your React code)
+    // Add shipping as a separate line item if needed
     const shippingAmountCents = Math.round(Number(shipping || 0) * 100);
     if (shippingAmountCents > 0) {
       line_items.push({
         price_data: {
           currency: 'usd',
-          product_data: { name: 'Shipping' },
+          product_data: { name: 'Shipping (research materials)' },
           unit_amount: shippingAmountCents,
         },
         quantity: 1,
       });
     }
 
-    // Figure out your site origin (e.g. https://peptidestream.com)
+    const customerName = customer?.name || '';
+    const customerEmail = customer?.email || '';
+    const customerPhone = customer?.phone || '';
+    const customerAddress = customer?.address || '';
+
+    // Compact order breakdown string for metadata
+    const orderSummary = items
+      .map((i) => `${i.title || 'Item'} x${i.qty || 1}`)
+      .join('; ')
+      .slice(0, 450); // stay under Stripe's 500-char metadata limit
+
+    // Build a safe origin for success/cancel URLs
     const origin =
       process.env.FRONTEND_URL ||
       event.headers.origin ||
@@ -74,8 +86,31 @@ exports.handler = async (event) => {
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
+      payment_method_types: ['card'],
       line_items,
-      // You can add customer_email or metadata here later if you want
+
+      // Restrict shipping to US (typical for peptide research vendors)
+      shipping_address_collection: {
+        allowed_countries: ['US'],
+      },
+
+      // Let Stripe send receipts to the same email
+      customer_email: customerEmail || undefined,
+
+      // Put the important stuff on the underlying PaymentIntent
+      payment_intent_data: {
+        metadata: {
+          customer_name: customerName,
+          customer_email: customerEmail,
+          customer_phone: customerPhone,
+          customer_address: customerAddress,
+          order_summary: orderSummary,
+          research_use_only: researchUseConfirmed ? 'true' : 'false',
+          compliance_note:
+            'All items sold for lawful laboratory research use only. Not for human or veterinary use. No medical, diagnostic, or therapeutic claims are made.',
+        },
+      },
+
       success_url: `${origin}/store?status=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/store?status=cancel`,
     });
@@ -86,7 +121,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({ id: session.id }),
     };
   } catch (err) {
-    console.error('create-checkout-session function error', err);
+    console.error('create-checkout-session error', err);
     return {
       statusCode: 500,
       headers: defaultHeaders,
