@@ -130,7 +130,7 @@ export default function Store() {
 
     try {
       await navigator.clipboard.writeText(lines.join('\n'))
-    } catch (_) {}
+    } catch (_) { }
 
     setEmailSubmitted(true)
 
@@ -165,9 +165,7 @@ export default function Store() {
         </strong>
         <br />
         <br />
-        Due to current U.S. banking restrictions on peptide-based
-        research materials, PeptideStream cannot offer direct card
-        checkout. All orders are submitted first via email.
+        To maintain compliance with payment policies for laboratory research-use materials, all orders begin with a submitted order form. After submitting, you may complete payment through Stripe or Venmo.
         <br />
         <br />
         After your order is received, you will be able to pay via
@@ -254,82 +252,82 @@ export default function Store() {
           </button>
 
           {/* SECOND: Stripe */}
-<button
-  type="button"
-  className="btn pay"
-  disabled={grand <= 0 || !emailSubmitted}
-  onClick={async () => {
-    if (grand <= 0) {
-      alert('Add at least one product to enable card payment.')
-      return
-    }
-    if (!emailSubmitted) {
-      alert('Please submit your order via email first.')
-      return
-    }
+          <button
+            type="button"
+            className="btn pay"
+            disabled={grand <= 0 || !emailSubmitted}
+            onClick={async () => {
+              if (grand <= 0) {
+                alert('Add at least one product to enable card payment.')
+                return
+              }
+              if (!emailSubmitted) {
+                alert('Please submit your order via email first.')
+                return
+              }
 
-    // Read customer info from the form so Stripe gets the same data
-    const name = document.getElementById('name')?.value?.trim() || ''
-    const email = document.getElementById('email')?.value?.trim() || ''
-    const phone = document.getElementById('phone')?.value?.trim() || ''
-    const address = document.getElementById('address')?.value?.trim() || ''
-    const agreeChecked = document.getElementById('agree')?.checked
+              // Read customer info from the form so Stripe gets the same data
+              const name = document.getElementById('name')?.value?.trim() || ''
+              const email = document.getElementById('email')?.value?.trim() || ''
+              const phone = document.getElementById('phone')?.value?.trim() || ''
+              const address = document.getElementById('address')?.value?.trim() || ''
+              const agreeChecked = document.getElementById('agree')?.checked
 
-    if (!agreeChecked) {
-      alert(
-        'Please confirm research use only and agreement to the Terms & Conditions before paying.'
-      )
-      return
-    }
+              if (!agreeChecked) {
+                alert(
+                  'Please confirm research use only and agreement to the Terms & Conditions before paying.'
+                )
+                return
+              }
 
-    const payloadItems = PRODUCTS.map(p => ({
-      id: p.id,
-      title: p.title,
-      price: p.price,
-      qty: qty[p.id] || 0,
-    })).filter(i => i.qty > 0)
+              const payloadItems = PRODUCTS.map(p => ({
+                id: p.id,
+                title: p.title,
+                price: p.price,
+                qty: qty[p.id] || 0,
+              })).filter(i => i.qty > 0)
 
-    if (!payloadItems.length) {
-      alert('Please add at least one product before paying.')
-      return
-    }
+              if (!payloadItems.length) {
+                alert('Please add at least one product before paying.')
+                return
+              }
 
-    try {
-      const stripe = await stripePromise
-      const res = await fetch('/.netlify/functions/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: payloadItems,
-          shipping,
-          customer: {
-            name,
-            email,
-            phone,
-            address,
-          },
-          researchUseConfirmed: true,
-        }),
-      })
+              try {
+                const stripe = await stripePromise
+                const res = await fetch('/.netlify/functions/create-checkout-session', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    items: payloadItems,
+                    shipping,
+                    customer: {
+                      name,
+                      email,
+                      phone,
+                      address,
+                    },
+                    researchUseConfirmed: true,
+                  }),
+                })
 
-      const data = await res.json()
+                const data = await res.json()
 
-      if (!res.ok || data.error) {
-        console.error(data.error)
-        alert('Error creating Stripe checkout session.')
-        return
-      }
+                if (!res.ok || data.error) {
+                  console.error(data.error)
+                  alert('Error creating Stripe checkout session.')
+                  return
+                }
 
-      const { error } = await stripe.redirectToCheckout({ sessionId: data.id })
-      if (error) alert(error.message)
-    } catch (err) {
-      console.error('Stripe payment error', err)
-      alert('Unexpected error starting payment.')
-    }
-  }}
->
-  Pay with Card (Stripe)
-</button>
+                const { error } = await stripe.redirectToCheckout({ sessionId: data.id })
+                if (error) alert(error.message)
+              } catch (err) {
+                console.error('Stripe payment error', err)
+                alert('Unexpected error starting payment.')
+              }
+            }}
+          >
+            Pay with Card (Stripe)
+          </button>
 
 
           {/* THIRD: Venmo */}
