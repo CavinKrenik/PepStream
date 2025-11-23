@@ -13,8 +13,8 @@ export const PRODUCTS = [
   },
   {
   id: 'bacwater',
-  title: 'Bacteriostatic Water (30mL)',
-  price: 12.00,
+  title: 'Bacteriostatic Water 10ml',
+  price: 15.00,
   img: '/assets/bacwater.jpg',
   coa: null,
   badge: 'In Stock',
