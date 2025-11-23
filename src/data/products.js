@@ -12,10 +12,24 @@ export const PRODUCTS = [
       'For laboratory research use only. Not for human consumption or use in medical, veterinary, or household applications. All sales are subject to our Terms & Conditions of Sale.'
   },
   {
+  id: 'bacwater',
+  title: 'Bacteriostatic Water (30mL)',
+  price: 12.00,
+  img: '/assets/bacwater.jpg',
+  coa: null,
+  badge: 'In Stock',
+  details:
+    'Bacteriostatic Water (0.9% benzyl alcohol) is sterile, non-pyrogenic water used to reconstitute laboratory-grade peptides. The benzyl alcohol acts as a preservative to inhibit bacterial growth for multi-use vial handling.',
+  disclaimer:
+    'For laboratory research use only. Not for human consumption or use in medical, veterinary, or household applications. All sales are subject to our Terms & Conditions of Sale.'
+}
+
+,
+  {
     id: 'retatrutide20',
     title: 'Retatrutide 20mg',
     price: 150.00,
-    img: '/assets/placeholder.png',
+    img: '/assets/reta20.png',
     coa: '/assets/RetatrutideCertofAnalysis.jpg',
     badge: 'Eligible for Free Shipping',
     details:
@@ -91,11 +105,11 @@ export const PRODUCTS = [
   /* --- IMPORT STOCK 10–15 DAY WAIT --- */
   {
     id: 'pt141',
-    title: 'PT-141 (Import Stock) 10mg',
+    title: 'PT-141 10mg',
     price: 120.00,
     img: '/assets/placeholder.png',
     coa: null,
-    badge: 'Import Stock — Out of Stock',
+    badge: 'Out of Stock',
     details:
       'PT-141 (bremelanotide) is a melanocortin receptor agonist studied for its effects on neural pathways related to arousal and behavioral research.',
     disclaimer:
@@ -103,11 +117,11 @@ export const PRODUCTS = [
   },
   {
     id: 'ipacjc',
-    title: 'IPA-CJC Blend 10mg (Import)',
+    title: 'IPA-CJC Blend 10mg',
     price: 85.00,
     img: '/assets/placeholder.png',
     coa: null,
-    badge: 'Import Stock — 10–15 Day Wait',
+    badge: '10–15 Day Wait',
     details:
       'A blend of Ipamorelin and CJC-1295 widely researched for growth hormone secretion pathways, cellular repair, and metabolic studies.',
     disclaimer:
