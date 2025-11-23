@@ -9,6 +9,8 @@ export default function Footer() {
         laboratory research use only. Not for human consumption.
       </p>
       <nav className="footer-nav" aria-label="Footer navigation">
+        <Link to="/">Home</Link>
+        <span>·</span>
         <Link to="/terms">Terms &amp; Conditions</Link>
         <span>·</span>
         <Link to="/privacy">Privacy Policy</Link>
