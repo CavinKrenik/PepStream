@@ -8,8 +8,15 @@ export default function Footer() {
         © {new Date().getFullYear()} PeptideStream. All products are for
         laboratory research use only. Not for human consumption.
       </p>
-      <nav className="footer-nav">
-        <Link to="/terms">Terms &amp; Conditions of Sale</Link>
+      <nav className="footer-nav" style={{ display: 'flex', justifyContent: 'center', gap: 8, flexWrap: 'wrap' }}>
+        <Link to="/terms">Terms &amp; Conditions</Link>
+        <span>·</span>
+        <Link to="/privacy">Privacy Policy</Link>
+        <span>·</span>
+        <Link to="/refund">Refund Policy</Link>
+        <span>·</span>
+        <Link to="/disclaimer">Research Use Only</Link>
+        <span>·</span>
         <Link to="/contact">Contact</Link>
       </nav>
     </footer>
