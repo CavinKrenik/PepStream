@@ -254,55 +254,83 @@ export default function Store() {
           </button>
 
           {/* SECOND: Stripe */}
-          <button
-            type="button"
-            className="btn pay"
-            disabled={grand <= 0 || !emailSubmitted}
-            onClick={async () => {
-              if (!emailSubmitted) {
-                alert(
-                  'Please submit your order via email first.'
-                )
-                return
-              }
+<button
+  type="button"
+  className="btn pay"
+  disabled={grand <= 0 || !emailSubmitted}
+  onClick={async () => {
+    if (grand <= 0) {
+      alert('Add at least one product to enable card payment.')
+      return
+    }
+    if (!emailSubmitted) {
+      alert('Please submit your order via email first.')
+      return
+    }
 
-              const payloadItems = PRODUCTS.map(p => ({
-                id: p.id,
-                title: p.title,
-                price: p.price,
-                qty: qty[p.id] || 0
-              })).filter(i => i.qty > 0)
+    // Read customer info from the form so Stripe gets the same data
+    const name = document.getElementById('name')?.value?.trim() || ''
+    const email = document.getElementById('email')?.value?.trim() || ''
+    const phone = document.getElementById('phone')?.value?.trim() || ''
+    const address = document.getElementById('address')?.value?.trim() || ''
+    const agreeChecked = document.getElementById('agree')?.checked
 
-              try {
-                const stripe = await stripePromise
-                const res = await fetch(
-                  '/.netlify/functions/create-checkout-session',
-                  {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      items: payloadItems,
-                      shipping
-                    })
-                  }
-                )
-                const data = await res.json()
+    if (!agreeChecked) {
+      alert(
+        'Please confirm research use only and agreement to the Terms & Conditions before paying.'
+      )
+      return
+    }
 
-                if (!res.ok || data.error) {
-                  alert('Error creating Stripe checkout session.')
-                  return
-                }
+    const payloadItems = PRODUCTS.map(p => ({
+      id: p.id,
+      title: p.title,
+      price: p.price,
+      qty: qty[p.id] || 0,
+    })).filter(i => i.qty > 0)
 
-                await stripe.redirectToCheckout({
-                  sessionId: data.id
-                })
-              } catch (err) {
-                alert('Unexpected error starting payment.')
-              }
-            }}
-          >
-            Pay with Card (Stripe)
-          </button>
+    if (!payloadItems.length) {
+      alert('Please add at least one product before paying.')
+      return
+    }
+
+    try {
+      const stripe = await stripePromise
+      const res = await fetch('/.netlify/functions/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: payloadItems,
+          shipping,
+          customer: {
+            name,
+            email,
+            phone,
+            address,
+          },
+          researchUseConfirmed: true,
+        }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok || data.error) {
+        console.error(data.error)
+        alert('Error creating Stripe checkout session.')
+        return
+      }
+
+      const { error } = await stripe.redirectToCheckout({ sessionId: data.id })
+      if (error) alert(error.message)
+    } catch (err) {
+      console.error('Stripe payment error', err)
+      alert('Unexpected error starting payment.')
+    }
+  }}
+>
+  Pay with Card (Stripe)
+</button>
+
 
           {/* THIRD: Venmo */}
           <button
