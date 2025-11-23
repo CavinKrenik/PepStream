@@ -21,18 +21,17 @@ export default function App() {
       </header>
 
       {showBanner && (
-  <>
-    <div className="promo-bar">
-      <div className="promo-scroll">
-        Orders over $150 ship FREE. Orders under $150 incur a flat $15 shipping fee.
-      </div>
-    </div>
-    <div className="banner">
-      <img src="/assets/ad.png" alt="Promo Banner" />
-    </div>
-  </>
-)}
-
+        <>
+          <div className="promo-bar">
+            <div className="promo-scroll">
+              Orders over $150 ship FREE. Orders under $150 incur a flat $15 shipping fee.
+            </div>
+          </div>
+          <div className="banner">
+            <img src="/assets/ad.png" alt="Promo Banner" />
+          </div>
+        </>
+      )}
 
       <Outlet />
 
@@ -41,11 +40,17 @@ export default function App() {
           © {new Date().getFullYear()} PeptideStream. All products are for
           laboratory research use only. Not for human consumption.
         </p>
-        
-        <nav>
-          <Link to="/terms">Terms &amp; Conditions of Sale</Link>
-          <span> · </span>
+
+        <nav style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '6px' }}>
+          <Link to="/terms">Terms &amp; Conditions</Link>
+          <span>·</span>
+          <Link to="/privacy">Privacy Policy</Link>
+          <span>·</span>
+          <Link to="/refund">Refund Policy</Link>
+          <span>·</span>
           <Link to="/contact">Contact</Link>
+          <span>·</span>
+          <Link to="/disclaimer">Research Use Only</Link>
         </nav>
       </footer>
     </>
