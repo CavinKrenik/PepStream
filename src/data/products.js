@@ -116,9 +116,9 @@ export const PRODUCTS = [
   },
   {
     id: 'ipacjc',
-    title: 'IPA-CJC Blend 10mg',
+    title: 'IPA-CJC Blend 5mg/5mg',
     price: 85.0,
-    img: '/assets/placeholder.png',
+    img: '/assets/ipa.png',
     coa: null,
     badge: '10–15 Day Wait',
     details:
