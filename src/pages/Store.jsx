@@ -2,8 +2,8 @@ import React, { useMemo, useState } from 'react'
 import { PRODUCTS } from '../data/products'
 import ProductCard from '../components/ProductCard'
 
-// 🔥 Toggle this to pause/unpause the store
-const SITE_PAUSED = true // set to false when you're ready to go live again
+// pause/unpause the store
+const SITE_PAUSED = false 
 
 export default function Store() {
   // Track quantity per product
