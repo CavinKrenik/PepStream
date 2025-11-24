@@ -213,7 +213,7 @@ export default function Store() {
             Laboratory research-use only. Not for human consumption.
           </p>
           <h2 style={{ marginBottom: '10px' }}>
-            The PeptideStream shop is temporarily paused
+            The PeptideStream shop is temporarily Offline
           </h2>
           <p style={{ marginBottom: '10px' }}>
             We are currently updating the store and processing orders
