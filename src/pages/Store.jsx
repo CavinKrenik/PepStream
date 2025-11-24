@@ -35,13 +35,20 @@ export default function Store() {
 
     const params = new URLSearchParams({
       amount: grand.toFixed(2),
-      note: 'PeptideStream Order - Research Use Only',
+      note: 'PeptideStream Order - Research Use Only'
     })
 
     return `${base}?${params.toString()}`
   }, [grand])
 
   const [emailSubmitted, setEmailSubmitted] = useState(false)
+
+  // Read ?status=success / ?status=cancel from URL (for banners)
+  const status = useMemo(() => {
+    if (typeof window === 'undefined') return null
+    const params = new URLSearchParams(window.location.search)
+    return params.get('status')
+  }, [])
 
   const inc = id => {
     setQty(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }))
@@ -68,7 +75,8 @@ export default function Store() {
 
     const name = document.getElementById('name')?.value?.trim() || ''
     const phone = document.getElementById('phone')?.value?.trim() || ''
-    const address = document.getElementById('address')?.value?.trim() || ''
+    const address =
+      document.getElementById('address')?.value?.trim() || ''
     const email = document.getElementById('email')?.value?.trim() || ''
 
     const items = PRODUCTS
@@ -77,7 +85,7 @@ export default function Store() {
         title: p.title,
         price: p.price,
         qty: qty[p.id],
-        line: p.price * qty[p.id],
+        line: p.price * qty[p.id]
       }))
 
     if (!items.length) {
@@ -143,6 +151,67 @@ export default function Store() {
         Laboratory research-use only. Not for human consumption.
       </p>
 
+      {/* ✅ SUCCESS / CANCEL BANNERS */}
+      {status === 'success' && (
+        <div
+          style={{
+            margin: '10px 0 16px',
+            padding: '12px 16px',
+            borderRadius: '10px',
+            background:
+              'linear-gradient(135deg, rgba(16,185,129,0.18), rgba(5,150,105,0.25))',
+            border: '1px solid rgba(16,185,129,0.7)',
+            color: 'var(--text)',
+            fontSize: 14
+          }}
+        >
+          <strong style={{ display: 'block', marginBottom: 4 }}>
+            Payment Successful
+          </strong>
+          Your payment has been processed successfully. Your order
+          details and payment information will be reviewed and
+          verified as research-use-only materials. If you have any
+          questions about your order, please contact{' '}
+          <a
+            href="mailto:peptidestream@gmail.com"
+            style={{ color: 'var(--accent)' }}
+          >
+            peptidestream@gmail.com
+          </a>
+          .
+        </div>
+      )}
+
+      {status === 'cancel' && (
+        <div
+          style={{
+            margin: '10px 0 16px',
+            padding: '12px 16px',
+            borderRadius: '10px',
+            background:
+              'linear-gradient(135deg, rgba(248,187,89,0.18), rgba(245,158,11,0.18))',
+            border: '1px solid rgba(245,158,11,0.7)',
+            color: 'var(--text)',
+            fontSize: 14
+          }}
+        >
+          <strong style={{ display: 'block', marginBottom: 4 }}>
+            Payment Canceled
+          </strong>
+          Your Stripe checkout session was canceled before
+          completion. You may start payment again using the Stripe
+          or Venmo buttons below, or reach out to{' '}
+          <a
+            href="mailto:peptidestream@gmail.com"
+            style={{ color: 'var(--accent)' }}
+          >
+            peptidestream@gmail.com
+          </a>{' '}
+          if you need assistance.
+        </div>
+      )}
+
+      {/* EXPLANATION CARD */}
       <div
         className="notice-card"
         style={{
@@ -153,7 +222,7 @@ export default function Store() {
           borderRadius: '12px',
           fontSize: '14px',
           lineHeight: 1.5,
-          color: 'var(--muted)',
+          color: 'var(--muted)'
         }}
       >
         <strong style={{ color: 'var(--text)' }}>
@@ -164,7 +233,8 @@ export default function Store() {
         To maintain compliance with payment policies for laboratory
         research-use materials, all PeptideStream orders begin by
         submitting the order form. Once your order is submitted,
-        secure payment options (Stripe or Venmo) will become available.
+        secure payment options (Stripe or Venmo) will become
+        available.
         <br />
         <br />
         For assistance, email us at{' '}
@@ -248,7 +318,7 @@ export default function Store() {
             type="submit"
             className="btn"
             style={{
-              background: 'linear-gradient(135deg,#10b981,#059669)',
+              background: 'linear-gradient(135deg,#10b981,#059669)'
             }}
           >
             Submit Order via Email
@@ -291,13 +361,11 @@ export default function Store() {
                 id: p.id,
                 title: p.title,
                 price: p.price,
-                qty: qty[p.id] || 0,
+                qty: qty[p.id] || 0
               })).filter(i => i.qty > 0)
 
               if (!payloadItems.length) {
-                alert(
-                  'Please add at least one product before paying.'
-                )
+                alert('Please add at least one product before paying.')
                 return
               }
 
@@ -311,8 +379,8 @@ export default function Store() {
                       items: payloadItems,
                       shipping,
                       customer: { name, email, phone, address },
-                      researchUseConfirmed: true,
-                    }),
+                      researchUseConfirmed: true
+                    })
                   }
                 )
 
@@ -331,7 +399,7 @@ export default function Store() {
                   return
                 }
 
-                // NEW: redirect directly to the session URL
+                // Redirect directly to Checkout
                 window.location.href = data.url
               } catch (err) {
                 console.error('Stripe payment error', err)
@@ -349,9 +417,7 @@ export default function Store() {
             disabled={grand <= 0 || !emailSubmitted}
             onClick={() => {
               if (!emailSubmitted) {
-                alert(
-                  'Please submit your order via email first.'
-                )
+                alert('Please submit your order via email first.')
                 return
               }
               if (grand <= 0) {
@@ -364,7 +430,7 @@ export default function Store() {
               marginTop: 8,
               background: '#3d95ce',
               color: 'white',
-              fontWeight: 600,
+              fontWeight: 600
             }}
           >
             Pay with Venmo @ryanharper38
@@ -374,10 +440,9 @@ export default function Store() {
 
       <section className="info">
         <p className="global-disclaimer">
-          All products are for laboratory research-use only. Not
-          for human consumption, nor medical, veterinary, or
-          household uses. See{' '}
-          <a href="/terms">Terms &amp; Conditions</a>.
+          All products are for laboratory research-use only. Not for
+          human consumption, nor medical, veterinary, or household
+          uses. See <a href="/terms">Terms &amp; Conditions</a>.
         </p>
       </section>
     </main>
