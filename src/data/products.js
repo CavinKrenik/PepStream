@@ -92,7 +92,7 @@ export const PRODUCTS = [
     id: 'mt2',
     title: 'Melanotan 2 (MT2) 10mg',
     price: 45.0,
-    img: '/assets/placeholder.png',
+    img: '/assets/mt2.jpg',
     coa: null,
     badge: 'Eligible for Free Shipping',
     details:
@@ -118,7 +118,7 @@ export const PRODUCTS = [
     id: 'ipacjc',
     title: 'IPA-CJC Blend 5mg/5mg',
     price: 85.0,
-    img: '/assets/ipa.png',
+    img: '/assets/ipa.jpg',
     coa: null,
     badge: '10–15 Day Wait',
     details:
@@ -132,7 +132,7 @@ export const PRODUCTS = [
     id: 'glowstack',
     title: 'Glow Stack 70mg',
     price: 75.0,
-    img: '/assets/glowstack.png',
+    img: '/assets/glowstack.jpg',
     coa: null,
     badge: 'US Stock — Limited Supply',
     details:
