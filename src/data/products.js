@@ -80,7 +80,7 @@ export const PRODUCTS = [
     id: 'bpc_tb',
     title: 'BPC/TB Blend 10mg',
     price: 45.0,
-    img: '/assets/placeholder.png',
+    img: '/assets/bpctb.jpg',
     coa: null,
     badge: 'Eligible for Free Shipping',
     details:
