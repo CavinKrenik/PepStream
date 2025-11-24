@@ -351,7 +351,7 @@ export default function Store() {
               fontWeight: 600
             }}
           >
-            Pay with Venmo @ryanharper38
+            Pay with Venmo
           </button>
         </div>
       </form>
