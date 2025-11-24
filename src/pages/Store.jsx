@@ -537,7 +537,7 @@ export default function Store() {
                   fontWeight: 600,
                 }}
               >
-                Pay with Venmo @ryanharper38
+                Pay with Venmo
               </button>
 
               {/* 3) Email-only order (no payment) */}
