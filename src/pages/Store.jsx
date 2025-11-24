@@ -3,7 +3,7 @@ import { PRODUCTS } from '../data/products'
 import ProductCard from '../components/ProductCard'
 
 // 🔥 Toggle this to pause/unpause the store
-const SITE_PAUSED = true // set to false when you're ready to go live again
+const SITE_PAUSED = false // set to false when you're ready to go live again
 
 export default function Store() {
   // Track quantity per product
@@ -213,7 +213,7 @@ export default function Store() {
             Laboratory research-use only. Not for human consumption.
           </p>
           <h2 style={{ marginBottom: '10px' }}>
-            The PeptideStream shop is temporarily Offline
+            The PeptideStream shop is temporarily paused
           </h2>
           <p style={{ marginBottom: '10px' }}>
             We are currently updating the store and processing orders
