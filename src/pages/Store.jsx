@@ -41,8 +41,6 @@ export default function Store() {
     return `${base}?${params.toString()}`
   }, [grand])
 
-  const [emailSubmitted, setEmailSubmitted] = useState(false)
-
   // Read ?status=success / ?status=cancel from URL (for banners)
   const status = useMemo(() => {
     if (typeof window === 'undefined') return null
@@ -52,34 +50,40 @@ export default function Store() {
 
   const inc = id => {
     setQty(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }))
-    setEmailSubmitted(false)
   }
 
   const dec = id => {
     setQty(prev => ({ ...prev, [id]: Math.max(0, (prev[id] || 0) - 1) }))
-    setEmailSubmitted(false)
   }
 
-  // 🚀 NEW: server-side email via Netlify function (no mailto)
-  async function handleSubmit(e) {
-    e.preventDefault()
-
-    const form = e.currentTarget
-    const agree = form.querySelector('#agree')?.checked
-
+  // Shared helper: send the order via SendGrid from the form fields
+  async function sendOrderEmail({
+    showSuccessAlert = false,
+    paymentMethod = 'email',
+  } = {}) {
+    const agree = document.getElementById('agree')?.checked
     if (!agree) {
       alert(
         'You must confirm research use only and agreement to the Terms & Conditions of Sale.'
       )
-      return
+      throw new Error('terms_not_accepted')
     }
 
-    const name = document.getElementById('name')?.value?.trim() || ''
-    const phone = document.getElementById('phone')?.value?.trim() || ''
-    const address =
-      document.getElementById('address')?.value?.trim() || ''
+    const name =
+      document.getElementById('name')?.value?.trim() || ''
+    const phone =
+      document.getElementById('phone')?.value?.trim() || ''
     const email =
       document.getElementById('email')?.value?.trim() || ''
+    const address =
+      document.getElementById('address')?.value?.trim() || ''
+
+    if (!name || !email || !address || !phone) {
+      alert(
+        'Please fill out name, email, phone, and shipping address.'
+      )
+      throw new Error('missing_fields')
+    }
 
     const items = PRODUCTS
       .filter(p => (qty[p.id] || 0) > 0)
@@ -93,17 +97,26 @@ export default function Store() {
 
     if (!items.length) {
       alert('Please add at least one product before submitting.')
-      return
+      throw new Error('no_items')
     }
 
+    const methodLabel =
+      paymentMethod === 'stripe'
+        ? 'Stripe (card checkout)'
+        : paymentMethod === 'venmo'
+        ? 'Venmo'
+        : 'Email / Manual Payment'
+
     const lines = []
-    lines.push('PeptideStream Order')
-    lines.push('-------------------')
-    lines.push(`Name: ${name}`)
-    lines.push(`Phone: ${phone}`)
-    lines.push(`Email: ${email}`)
+    lines.push('New PeptideStream order request')
+    lines.push('----------------------------------------')
+    lines.push(`Name:    ${name}`)
+    lines.push(`Email:   ${email}`)
+    lines.push(`Phone:   ${phone}`)
     lines.push('Address:')
     lines.push(address)
+    lines.push('')
+    lines.push(`Payment Method: ${methodLabel}`)
     lines.push('')
     lines.push('Items:')
     items.forEach(i => {
@@ -124,44 +137,55 @@ export default function Store() {
 
     const orderText = lines.join('\n')
 
+    const res = await fetch('/.netlify/functions/send-order-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customer: { name, phone, email, address },
+        items: items.map(i => ({
+          id: i.id,
+          title: i.title,
+          price: i.price,
+          qty: i.qty,
+        })),
+        totals: { subtotal, shipping, grand },
+        researchUseConfirmed: true,
+        paymentMethod, // extra info for your Netlify function/email
+        orderText,
+      }),
+    })
+
+    const data = await res.json()
+
+    if (!res.ok || data.error) {
+      console.error('Order email error', data.error)
+      alert(
+        'There was a problem submitting your order. Please try again or email peptidestream@gmail.com.'
+      )
+      throw new Error(data.error || 'email_failed')
+    }
+
+    if (showSuccessAlert) {
+      alert(
+        'Your order has been submitted to PeptideStream. You can now pay with Stripe, Venmo, or use this email order form by itself.'
+      )
+    }
+
+    // Return details so Stripe can reuse them
+    return { name, phone, email, address }
+  }
+
+  // Email-only submit
+  async function handleSubmit(e) {
+    e.preventDefault()
     try {
-      const res = await fetch('/.netlify/functions/send-order-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          customer: { name, phone, email, address },
-          items: items.map(i => ({
-            id: i.id,
-            title: i.title,
-            price: i.price,
-            qty: i.qty,
-          })),
-          totals: { subtotal, shipping, grand },
-          researchUseConfirmed: true,
-          orderText,
-        }),
+      await sendOrderEmail({
+        showSuccessAlert: true,
+        paymentMethod: 'email',
       })
-
-      const data = await res.json()
-
-      if (!res.ok || data.error) {
-        console.error('Order email error', data.error)
-        alert(
-          'There was a problem submitting your order. Please try again or email peptidestream@gmail.com.'
-        )
-        return
-      }
-
-      setEmailSubmitted(true)
-
-      alert(
-        'Your order has been submitted to PeptideStream. You may now complete payment using Stripe or Venmo.'
-      )
     } catch (err) {
-      console.error('Order email network error', err)
-      alert(
-        'There was a network error submitting your order. Please try again or email peptidestream@gmail.com with your order details.'
-      )
+      console.error('handleSubmit error', err)
+      // Validation and alerts are already handled inside sendOrderEmail
     }
   }
 
@@ -190,9 +214,9 @@ export default function Store() {
             Payment Successful
           </strong>
           Your payment has been processed successfully. Your order
-          details and payment information will be reviewed and
-          verified as research-use-only materials. If you have any
-          questions about your order, please contact{' '}
+          details will be reviewed and verified as research-use-only
+          materials. If you have any questions about your order,
+          please contact{' '}
           <a
             href="mailto:peptidestream@gmail.com"
             style={{ color: 'var(--accent)' }}
@@ -251,11 +275,20 @@ export default function Store() {
         </strong>
         <br />
         <br />
-        To maintain compliance with payment policies for laboratory
-        research-use materials, all PeptideStream orders begin by
-        submitting the order form. Once your order is submitted,
-        secure payment options (Stripe or Venmo) will become
-        available.
+        Fill out the order form once, then choose how you would like
+        to complete your order:
+        <br />
+        <br />
+        • <strong>Pay with Card (Stripe)</strong> – your order
+        details are emailed to PeptideStream and you&apos;re taken to
+        secure card checkout.
+        <br />
+        • <strong>Pay with Venmo</strong> – your order details are
+        emailed and your Venmo payment window opens.
+        <br />
+        • <strong>Submit Order via Email</strong> – sends the order
+        form to PeptideStream without starting payment (for manual
+        payment arrangements).
         <br />
         <br />
         For assistance, email us at{' '}
@@ -326,7 +359,7 @@ export default function Store() {
           <span>
             I confirm I am 21+ and purchasing solely for lawful
             laboratory research use. I agree to the{' '}
-            <a href="/terms" target="_blank">
+            <a href="/terms" target="_blank" rel="noreferrer">
               Terms &amp; Conditions of Sale
             </a>
             .
@@ -334,49 +367,31 @@ export default function Store() {
         </label>
 
         <div className="actions">
-          {/* 1) Submit order (server-side email) */}
-          <button
-            type="submit"
-            className="btn"
-            style={{
-              background: 'linear-gradient(135deg,#10b981,#059669)',
-            }}
-          >
-            Submit Order via Email
-          </button>
-
-          {/* 2) Stripe payment */}
+          {/* 1) Stripe payment (auto-sends order email) */}
           <button
             type="button"
             className="btn pay"
-            disabled={grand <= 0 || !emailSubmitted}
+            disabled={grand <= 0}
             onClick={async () => {
               if (grand <= 0) {
                 alert('Add at least one product to enable card payment.')
                 return
               }
-              if (!emailSubmitted) {
-                alert('Please submit your order via email first.')
+
+              let customer
+              try {
+                // Send order email silently (no extra popup here)
+                customer = await sendOrderEmail({
+                  showSuccessAlert: false,
+                  paymentMethod: 'stripe',
+                })
+              } catch (err) {
+                console.error('Order email failed before Stripe', err)
+                // sendOrderEmail already showed the error to the user
                 return
               }
 
-              const name =
-                document.getElementById('name')?.value?.trim() || ''
-              const email =
-                document.getElementById('email')?.value?.trim() || ''
-              const phone =
-                document.getElementById('phone')?.value?.trim() || ''
-              const address =
-                document.getElementById('address')?.value?.trim() || ''
-              const agreeChecked =
-                document.getElementById('agree')?.checked
-
-              if (!agreeChecked) {
-                alert(
-                  'Please confirm research use only and agreement to the Terms & Conditions before paying.'
-                )
-                return
-              }
+              const { name, email, phone, address } = customer
 
               const payloadItems = PRODUCTS.map(p => ({
                 id: p.id,
@@ -408,7 +423,7 @@ export default function Store() {
                 const data = await res.json()
 
                 if (!res.ok || data.error) {
-                  console.error(data.error)
+                  console.error('Stripe session error', data.error)
                   alert(
                     'Error creating Stripe checkout session. Please try again or contact support.'
                   )
@@ -431,20 +446,27 @@ export default function Store() {
             Pay with Card (Stripe)
           </button>
 
-          {/* 3) Venmo payment */}
+          {/* 2) Venmo payment (auto-sends order email) */}
           <button
             type="button"
             className="btn"
-            disabled={grand <= 0 || !emailSubmitted}
-            onClick={() => {
-              if (!emailSubmitted) {
-                alert('Please submit your order via email first.')
-                return
-              }
+            disabled={grand <= 0}
+            onClick={async () => {
               if (grand <= 0) {
                 alert('Add at least one product before paying.')
                 return
               }
+
+              try {
+                await sendOrderEmail({
+                  showSuccessAlert: false,
+                  paymentMethod: 'venmo',
+                })
+              } catch (err) {
+                console.error('Order email failed before Venmo', err)
+                return
+              }
+
               window.open(payHref, '_blank', 'noopener,noreferrer')
             }}
             style={{
@@ -455,6 +477,18 @@ export default function Store() {
             }}
           >
             Pay with Venmo @ryanharper38
+          </button>
+
+          {/* 3) Email-only order (no payment) */}
+          <button
+            type="submit"
+            className="btn"
+            style={{
+              marginTop: 10,
+              background: 'linear-gradient(135deg,#10b981,#059669)',
+            }}
+          >
+            Submit Order via Email
           </button>
         </div>
       </form>
