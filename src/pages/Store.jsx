@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react'
-import { loadStripe } from '@stripe/stripe-js'
 import { PRODUCTS } from '../data/products'
 import ProductCard from '../components/ProductCard'
 
@@ -11,7 +10,7 @@ export default function Store() {
 
   const fmt = n => '$' + n.toFixed(2)
 
-  // Subtotal from items
+  // Subtotal
   const subtotal = useMemo(
     () =>
       PRODUCTS.reduce(
@@ -36,15 +35,13 @@ export default function Store() {
 
     const params = new URLSearchParams({
       amount: grand.toFixed(2),
-      note: 'PeptideStream Order - Research Use Only'
+      note: 'PeptideStream Order - Research Use Only',
     })
 
     return `${base}?${params.toString()}`
   }, [grand])
 
   const [emailSubmitted, setEmailSubmitted] = useState(false)
-
-  const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
 
   const inc = id => {
     setQty(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }))
@@ -80,7 +77,7 @@ export default function Store() {
         title: p.title,
         price: p.price,
         qty: qty[p.id],
-        line: p.price * qty[p.id]
+        line: p.price * qty[p.id],
       }))
 
     if (!items.length) {
@@ -88,11 +85,12 @@ export default function Store() {
       return
     }
 
-    // Build order summary
     const lines = []
     lines.push('PeptideStream Order')
     lines.push('-------------------')
+    lines.push(`Name: ${name}`)
     lines.push(`Phone: ${phone}`)
+    lines.push(`Email: ${email}`)
     lines.push('Address:')
     lines.push(address)
     lines.push('')
@@ -120,7 +118,6 @@ export default function Store() {
       recipient
     )}?subject=${subject}&body=${body}`
 
-    // Open email client
     const a = document.createElement('a')
     a.href = mailto
     a.style.display = 'none'
@@ -130,7 +127,7 @@ export default function Store() {
 
     try {
       await navigator.clipboard.writeText(lines.join('\n'))
-    } catch (_) { }
+    } catch (_) {}
 
     setEmailSubmitted(true)
 
@@ -146,7 +143,6 @@ export default function Store() {
         Laboratory research-use only. Not for human consumption.
       </p>
 
-      {/* EXPLANATION CARD */}
       <div
         className="notice-card"
         style={{
@@ -157,25 +153,33 @@ export default function Store() {
           borderRadius: '12px',
           fontSize: '14px',
           lineHeight: 1.5,
-          color: 'var(--muted)'
+          color: 'var(--muted)',
         }}
       >
         <strong style={{ color: 'var(--text)' }}>
-          Why We Use Email Ordering & Payment Links
+          Ordering & Payment Process
         </strong>
         <br />
         <br />
-        To maintain compliance with payment policies for laboratory research-use materials, all orders begin with a submitted order form. After submitting, you may complete payment through Stripe or Venmo.
+        To maintain compliance with payment policies for laboratory
+        research-use materials, all PeptideStream orders begin by
+        submitting the order form. Once your order is submitted,
+        secure payment options (Stripe or Venmo) will become available.
         <br />
         <br />
-        After your order is received, you will be able to pay via
-        Stripe or Venmo.
+        For assistance, email us at{' '}
+        <a
+          href="mailto:peptidestream@gmail.com"
+          style={{ color: 'var(--accent)' }}
+        >
+          peptidestream@gmail.com
+        </a>
+        .
       </div>
 
       <form className="card" onSubmit={handleSubmit}>
         <h2>Order Form</h2>
 
-        {/* FIELDS */}
         <div className="field-row">
           <label htmlFor="name">Full Name</label>
           <input id="name" name="name" type="text" required />
@@ -208,7 +212,6 @@ export default function Store() {
           ))}
         </div>
 
-        {/* TOTALS */}
         <div className="totals">
           <div className="line">
             <span>Subtotal</span>
@@ -224,34 +227,34 @@ export default function Store() {
           </div>
         </div>
 
-        {/* AGREEMENT CHECKBOX */}
-        <label className="agree-line" style={{ marginTop: 12 }}>
+        <label
+          className="agree-line"
+          style={{ marginTop: 12, display: 'flex', gap: 8 }}
+        >
           <input id="agree" type="checkbox" required />
           <span>
             I confirm I am 21+ and purchasing solely for lawful
             laboratory research use. I agree to the{' '}
             <a href="/terms" target="_blank">
-              Terms & Conditions of Sale
+              Terms &amp; Conditions of Sale
             </a>
             .
           </span>
         </label>
 
-        {/* BUTTON ORDER FIXED */}
         <div className="actions">
-
-          {/* FIRST: Submit via Email */}
+          {/* 1) Submit via email */}
           <button
             type="submit"
             className="btn"
             style={{
-              background: 'linear-gradient(135deg,#10b981,#059669)'
+              background: 'linear-gradient(135deg,#10b981,#059669)',
             }}
           >
             Submit Order via Email
           </button>
 
-          {/* SECOND: Stripe */}
+          {/* 2) Stripe payment */}
           <button
             type="button"
             className="btn pay"
@@ -266,12 +269,16 @@ export default function Store() {
                 return
               }
 
-              // Read customer info from the form so Stripe gets the same data
-              const name = document.getElementById('name')?.value?.trim() || ''
-              const email = document.getElementById('email')?.value?.trim() || ''
-              const phone = document.getElementById('phone')?.value?.trim() || ''
-              const address = document.getElementById('address')?.value?.trim() || ''
-              const agreeChecked = document.getElementById('agree')?.checked
+              const name =
+                document.getElementById('name')?.value?.trim() || ''
+              const email =
+                document.getElementById('email')?.value?.trim() || ''
+              const phone =
+                document.getElementById('phone')?.value?.trim() || ''
+              const address =
+                document.getElementById('address')?.value?.trim() || ''
+              const agreeChecked =
+                document.getElementById('agree')?.checked
 
               if (!agreeChecked) {
                 alert(
@@ -288,38 +295,44 @@ export default function Store() {
               })).filter(i => i.qty > 0)
 
               if (!payloadItems.length) {
-                alert('Please add at least one product before paying.')
+                alert(
+                  'Please add at least one product before paying.'
+                )
                 return
               }
 
               try {
-                const stripe = await stripePromise
-                const res = await fetch('/.netlify/functions/create-checkout-session', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    items: payloadItems,
-                    shipping,
-                    customer: {
-                      name,
-                      email,
-                      phone,
-                      address,
-                    },
-                    researchUseConfirmed: true,
-                  }),
-                })
+                const res = await fetch(
+                  '/.netlify/functions/create-checkout-session',
+                  {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      items: payloadItems,
+                      shipping,
+                      customer: { name, email, phone, address },
+                      researchUseConfirmed: true,
+                    }),
+                  }
+                )
 
                 const data = await res.json()
 
                 if (!res.ok || data.error) {
                   console.error(data.error)
-                  alert('Error creating Stripe checkout session.')
+                  alert(
+                    'Error creating Stripe checkout session. Please try again or contact support.'
+                  )
                   return
                 }
 
-                const { error } = await stripe.redirectToCheckout({ sessionId: data.id })
-                if (error) alert(error.message)
+                if (!data.url) {
+                  alert('Stripe did not return a checkout URL.')
+                  return
+                }
+
+                // NEW: redirect directly to the session URL
+                window.location.href = data.url
               } catch (err) {
                 console.error('Stripe payment error', err)
                 alert('Unexpected error starting payment.')
@@ -329,8 +342,7 @@ export default function Store() {
             Pay with Card (Stripe)
           </button>
 
-
-          {/* THIRD: Venmo */}
+          {/* 3) Venmo payment */}
           <button
             type="button"
             className="btn"
@@ -342,19 +354,32 @@ export default function Store() {
                 )
                 return
               }
-              window.open(payHref, '_blank')
+              if (grand <= 0) {
+                alert('Add at least one product before paying.')
+                return
+              }
+              window.open(payHref, '_blank', 'noopener,noreferrer')
             }}
             style={{
               marginTop: 8,
               background: '#3d95ce',
               color: 'white',
-              fontWeight: 600
+              fontWeight: 600,
             }}
           >
-            Pay with Venmo
+            Pay with Venmo @ryanharper38
           </button>
         </div>
       </form>
+
+      <section className="info">
+        <p className="global-disclaimer">
+          All products are for laboratory research-use only. Not
+          for human consumption, nor medical, veterinary, or
+          household uses. See{' '}
+          <a href="/terms">Terms &amp; Conditions</a>.
+        </p>
+      </section>
     </main>
   )
 }
