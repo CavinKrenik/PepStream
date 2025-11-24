@@ -35,7 +35,7 @@ export default function Store() {
 
     const params = new URLSearchParams({
       amount: grand.toFixed(2),
-      note: 'PeptideStream Order - Research Use Only'
+      note: 'PeptideStream Order - Research Use Only',
     })
 
     return `${base}?${params.toString()}`
@@ -60,6 +60,7 @@ export default function Store() {
     setEmailSubmitted(false)
   }
 
+  // 🚀 NEW: server-side email via Netlify function (no mailto)
   async function handleSubmit(e) {
     e.preventDefault()
 
@@ -77,15 +78,17 @@ export default function Store() {
     const phone = document.getElementById('phone')?.value?.trim() || ''
     const address =
       document.getElementById('address')?.value?.trim() || ''
-    const email = document.getElementById('email')?.value?.trim() || ''
+    const email =
+      document.getElementById('email')?.value?.trim() || ''
 
     const items = PRODUCTS
       .filter(p => (qty[p.id] || 0) > 0)
       .map(p => ({
+        id: p.id,
         title: p.title,
         price: p.price,
         qty: qty[p.id],
-        line: p.price * qty[p.id]
+        line: p.price * qty[p.id],
       }))
 
     if (!items.length) {
@@ -119,29 +122,47 @@ export default function Store() {
       'I confirm I am 21+ and purchasing for lawful laboratory research use only. I agree to the Terms & Conditions of Sale.'
     )
 
-    const recipient = 'peptidestream@gmail.com'
-    const subject = encodeURIComponent('New PeptideStream Order')
-    const body = encodeURIComponent(lines.join('\n'))
-    const mailto = `mailto:${encodeURIComponent(
-      recipient
-    )}?subject=${subject}&body=${body}`
-
-    const a = document.createElement('a')
-    a.href = mailto
-    a.style.display = 'none'
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
+    const orderText = lines.join('\n')
 
     try {
-      await navigator.clipboard.writeText(lines.join('\n'))
-    } catch (_) {}
+      const res = await fetch('/.netlify/functions/send-order-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customer: { name, phone, email, address },
+          items: items.map(i => ({
+            id: i.id,
+            title: i.title,
+            price: i.price,
+            qty: i.qty,
+          })),
+          totals: { subtotal, shipping, grand },
+          researchUseConfirmed: true,
+          orderText,
+        }),
+      })
 
-    setEmailSubmitted(true)
+      const data = await res.json()
 
-    alert(
-      'Order summary prepared. If your email app did not open, paste the copied summary into an email to peptidestream@gmail.com.'
-    )
+      if (!res.ok || data.error) {
+        console.error('Order email error', data.error)
+        alert(
+          'There was a problem submitting your order. Please try again or email peptidestream@gmail.com.'
+        )
+        return
+      }
+
+      setEmailSubmitted(true)
+
+      alert(
+        'Your order has been submitted to PeptideStream. You may now complete payment using Stripe or Venmo.'
+      )
+    } catch (err) {
+      console.error('Order email network error', err)
+      alert(
+        'There was a network error submitting your order. Please try again or email peptidestream@gmail.com with your order details.'
+      )
+    }
   }
 
   return (
@@ -162,7 +183,7 @@ export default function Store() {
               'linear-gradient(135deg, rgba(16,185,129,0.18), rgba(5,150,105,0.25))',
             border: '1px solid rgba(16,185,129,0.7)',
             color: 'var(--text)',
-            fontSize: 14
+            fontSize: 14,
           }}
         >
           <strong style={{ display: 'block', marginBottom: 4 }}>
@@ -192,7 +213,7 @@ export default function Store() {
               'linear-gradient(135deg, rgba(248,187,89,0.18), rgba(245,158,11,0.18))',
             border: '1px solid rgba(245,158,11,0.7)',
             color: 'var(--text)',
-            fontSize: 14
+            fontSize: 14,
           }}
         >
           <strong style={{ display: 'block', marginBottom: 4 }}>
@@ -222,7 +243,7 @@ export default function Store() {
           borderRadius: '12px',
           fontSize: '14px',
           lineHeight: 1.5,
-          color: 'var(--muted)'
+          color: 'var(--muted)',
         }}
       >
         <strong style={{ color: 'var(--text)' }}>
@@ -313,12 +334,12 @@ export default function Store() {
         </label>
 
         <div className="actions">
-          {/* 1) Submit via email */}
+          {/* 1) Submit order (server-side email) */}
           <button
             type="submit"
             className="btn"
             style={{
-              background: 'linear-gradient(135deg,#10b981,#059669)'
+              background: 'linear-gradient(135deg,#10b981,#059669)',
             }}
           >
             Submit Order via Email
@@ -361,7 +382,7 @@ export default function Store() {
                 id: p.id,
                 title: p.title,
                 price: p.price,
-                qty: qty[p.id] || 0
+                qty: qty[p.id] || 0,
               })).filter(i => i.qty > 0)
 
               if (!payloadItems.length) {
@@ -379,8 +400,8 @@ export default function Store() {
                       items: payloadItems,
                       shipping,
                       customer: { name, email, phone, address },
-                      researchUseConfirmed: true
-                    })
+                      researchUseConfirmed: true,
+                    }),
                   }
                 )
 
@@ -430,7 +451,7 @@ export default function Store() {
               marginTop: 8,
               background: '#3d95ce',
               color: 'white',
-              fontWeight: 600
+              fontWeight: 600,
             }}
           >
             Pay with Venmo @ryanharper38
