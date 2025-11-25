@@ -53,21 +53,18 @@ export default function App() {
         </>
       )}
 
-      {/* NAV: shows on all pages, sits under banner on Store/Home */}
+      {/* NAV: only Store + Contact now */}
       <nav className="main-nav" aria-label="Main Navigation">
         <div className="main-nav-inner">
           {/* Store / Cart button */}
           <button
             type="button"
-            className={
-              isStoreLike ? 'nav-link active' : 'nav-link'
-            }
+            className={isStoreLike ? 'nav-link active' : 'nav-link'}
             onClick={() => {
               if (location.pathname === '/store') {
                 // Tell the Store page to open the cart drawer
                 window.dispatchEvent(new CustomEvent('open-cart'))
               } else {
-                // Navigate to /store
                 navigate('/store')
               }
             }}
@@ -79,50 +76,6 @@ export default function App() {
             />
             Store
           </button>
-
-          <Link
-            to="/terms"
-            className={
-              location.pathname === '/terms'
-                ? 'nav-link active'
-                : 'nav-link'
-            }
-          >
-            Terms
-          </Link>
-
-          <Link
-            to="/privacy"
-            className={
-              location.pathname === '/privacy'
-                ? 'nav-link active'
-                : 'nav-link'
-            }
-          >
-            Privacy
-          </Link>
-
-          <Link
-            to="/refund"
-            className={
-              location.pathname === '/refund'
-                ? 'nav-link active'
-                : 'nav-link'
-            }
-          >
-            Refund Policy
-          </Link>
-
-          <Link
-            to="/disclaimer"
-            className={
-              location.pathname === '/disclaimer'
-                ? 'nav-link active'
-                : 'nav-link'
-            }
-          >
-            Research Use Only
-          </Link>
 
           <Link
             to="/contact"

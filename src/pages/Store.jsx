@@ -376,44 +376,6 @@ export default function Store() {
             </div>
           )}
 
-          {/* EXPLANATION CARD */}
-          <div
-            className="notice-card"
-            style={{
-              margin: '12px 0 18px',
-              padding: '14px 18px',
-              background: 'rgba(15,23,42,0.6)',
-              border: '1px solid var(--line)',
-              borderRadius: '12px',
-              fontSize: '14px',
-              lineHeight: 1.5,
-              color: 'var(--muted)',
-            }}
-          >
-            <strong style={{ color: 'var(--text)' }}>
-              Ordering & Payment Process
-            </strong>
-            <br />
-            <br />
-            1. Fill out the order form and select your research
-            products.
-            <br />
-            2. Click the <strong>Cart</strong> button (or the cart icon
-            in the navigation) to review your items and totals.
-            <br />
-            3. Complete payment inside the cart drawer using Stripe or
-            Venmo, or submit the order via email.
-            <br />
-            <br />
-            For assistance, email us at{' '}
-            <a
-              href="mailto:peptidestream@gmail.com"
-              style={{ color: 'var(--accent)' }}
-            >
-              peptidestream@gmail.com
-            </a>
-            .
-          </div>
 
           {/* Main order form */}
           <form className="card" onSubmit={handleSubmit}>
