@@ -6,26 +6,18 @@ import {
   useNavigate,
 } from 'react-router-dom'
 import Footer from './components/Footer.jsx'
+import { CartProvider, useCart } from './context/CartContext.jsx'
+import { ToastProvider } from './context/ToastContext.jsx'
 
-export default function App() {
+function AppContent() {
   const location = useLocation()
   const navigate = useNavigate()
+  const { cartCount, openCart } = useCart()
 
   const isStoreLike =
     location.pathname === '/store' || location.pathname === '/'
 
   const showBanner = isStoreLike
-
-  // ⭐ LIVE CART COUNT FROM STORE
-  const [navCartCount, setNavCartCount] = React.useState(0)
-
-  React.useEffect(() => {
-    function handleCount(e) {
-      setNavCartCount(e.detail || 0)
-    }
-    window.addEventListener('cart-count', handleCount)
-    return () => window.removeEventListener('cart-count', handleCount)
-  }, [])
 
   return (
     <>
@@ -83,6 +75,18 @@ export default function App() {
             Store
           </Link>
 
+          {/* RESEARCH INFO */}
+          <Link
+            to="/research"
+            className={
+              location.pathname === '/research'
+                ? 'nav-link active'
+                : 'nav-link'
+            }
+          >
+            Research Info
+          </Link>
+
           {/* CONTACT */}
           <Link
             to="/contact"
@@ -102,15 +106,16 @@ export default function App() {
             onClick={() => {
               if (location.pathname !== '/store') {
                 navigate('/store')
+                // Small delay to let page load, then open cart
                 setTimeout(() => {
-                  window.dispatchEvent(new Event('open-cart'))
+                  openCart()
                 }, 50)
               } else {
-                window.dispatchEvent(new Event('open-cart'))
+                openCart()
               }
             }}
           >
-            🛒 Cart{navCartCount > 0 ? ` (${navCartCount})` : ''}
+            🛒 Cart{cartCount > 0 ? ` (${cartCount})` : ''}
           </button>
 
         </div>
@@ -122,5 +127,15 @@ export default function App() {
       {/* FOOTER */}
       <Footer />
     </>
+  )
+}
+
+export default function App() {
+  return (
+    <ToastProvider>
+      <CartProvider>
+        <AppContent />
+      </CartProvider>
+    </ToastProvider>
   )
 }

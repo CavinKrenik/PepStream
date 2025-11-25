@@ -168,13 +168,15 @@ textarea {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-left: auto; /* forces right placement consistency */
+  margin-left: auto;
+  /* forces right placement consistency */
 }
 
 /* Prevent weird wrapping on some cards (like NAD+) */
 .prod-main {
   flex: 1;
-  min-width: 0; /* this prevents overflow pushing buttons down */
+  min-width: 0;
+  /* this prevents overflow pushing buttons down */
 }
 
 
@@ -769,7 +771,8 @@ textarea {
 @media (max-width: 600px) {
   .prod-head {
     flex-direction: column;
-    align-items: flex-start;  /* image + text on top */
+    align-items: flex-start;
+    /* image + text on top */
   }
 
   .prod-main {
@@ -778,8 +781,171 @@ textarea {
   }
 
   .qty {
-    margin-left: 0;          /* undo the desktop auto-right */
+    margin-left: 0;
+    /* undo the desktop auto-right */
     margin-top: 8px;
-    align-self: flex-start;  /* keep it aligned with text */
+    align-self: flex-start;
+    /* keep it aligned with text */
+  }
+}
+
+/* ========== TOASTS ========== */
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+}
+
+.toast {
+  background: #1f2937;
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 250px;
+  animation: toast-in 0.3s ease-out;
+  border: 1px solid var(--line);
+}
+
+.toast-success {
+  border-left: 4px solid var(--ok);
+}
+
+.toast-error {
+  border-left: 4px solid #ef4444;
+}
+
+.toast-info {
+  border-left: 4px solid var(--accent);
+}
+
+.toast button {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  margin-left: auto;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+@keyframes toast-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ========== RESEARCH PAGE LAYOUT ========== */
+.research-layout {
+  display: flex;
+  gap: 30px;
+  margin-top: 20px;
+  align-items: flex-start;
+}
+
+.research-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: #0f1720;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+  position: sticky;
+  top: 90px;
+  /* stick below header */
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+
+.research-menu-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 10px 14px;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.research-menu-btn:hover {
+  background: rgba(56, 189, 248, 0.1);
+  color: var(--text);
+}
+
+.research-menu-btn.active {
+  background: var(--accent);
+  color: #0b0f14;
+  font-weight: 600;
+}
+
+.research-content {
+  flex: 1;
+  min-width: 0;
+  /* prevent overflow */
+}
+
+.research-card {
+  background: #0f1720;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 30px;
+  animation: fade-in 0.3s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile: Stack them */
+@media (max-width: 768px) {
+  .research-layout {
+    flex-direction: column;
+  }
+
+  .research-sidebar {
+    width: 100%;
+    position: static;
+    display: flex;
+    overflow-x: auto;
+    padding: 6px;
+    gap: 6px;
+    border-radius: 8px;
+    background: #020617;
+  }
+
+  .research-menu-btn {
+    width: auto;
+    white-space: nowrap;
+    padding: 8px 16px;
+    border: 1px solid var(--line);
+    background: #0b1220;
+  }
+
+  .research-menu-btn.active {
+    border-color: var(--accent);
   }
 }

@@ -16,6 +16,7 @@ import Refund from './pages/Refund.jsx'
 import Disclaimer from './pages/Disclaimer.jsx'
 import Contact from './pages/Contact.jsx'
 import NotFound from './pages/NotFound.jsx'
+import ResearchInfo from './pages/ResearchInfo.jsx'
 
 import './styles.css'
 
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <AgeGate /> },    // /
       { path: 'store', element: <Store /> },    // /store
+      { path: 'research', element: <ResearchInfo /> }, // /research
       { path: 'terms', element: <Terms /> },    // /terms
       { path: 'privacy', element: <Privacy /> }, // /privacy
       { path: 'refund', element: <Refund /> },   // /refund
