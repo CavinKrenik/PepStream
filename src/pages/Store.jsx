@@ -81,14 +81,14 @@ export default function Store() {
     [qty]
   )
 
-  // 🔔 Broadcast cartCount to nav
+  // 🔔 Broadcast cartCount to nav (for the Cart badge)
   useEffect(() => {
     window.dispatchEvent(
       new CustomEvent('cart-count', { detail: cartCount })
     )
   }, [cartCount])
 
-  // Venmo payment link (web URL, mobile-safe navigation)
+  // Venmo web payment link
   const payHref = useMemo(() => {
     const base = 'https://account.venmo.com/u/Ryanharper38'
     if (grand <= 0) return base
@@ -101,11 +101,35 @@ export default function Store() {
     return `${base}?${params.toString()}`
   }, [grand])
 
+  // ✅ Venmo deep link (opens Venmo app directly on mobile)
+  const venmoDeepLink = useMemo(() => {
+    const username = 'Ryanharper38'
+
+    if (grand <= 0) {
+      // no amount → just open profile if app is installed
+      return `venmo://users/${username}`
+    }
+
+    const amount = grand.toFixed(2)
+    const note = encodeURIComponent(
+      'PeptideStream Order - Research Use Only'
+    )
+
+    return `venmo://paycharge?txn=pay&recipients=${username}&amount=${amount}&note=${note}`
+  }, [grand])
+
   // Listen for global "open-cart" events (from nav)
   useEffect(() => {
     const handler = () => setCartOpen(true)
     window.addEventListener('open-cart', handler)
     return () => window.removeEventListener('open-cart', handler)
+  }, [])
+
+  // Read ?status=success / ?status=cancel from URL (for banners)
+  const status = useMemo(() => {
+    if (typeof window === 'undefined') return null
+    const params = new URLSearchParams(window.location.search)
+    return params.get('status')
   }, [])
 
   const inc = id => {
@@ -304,7 +328,77 @@ export default function Store() {
             Laboratory research-use only. Not for human consumption.
           </p>
 
-          {/* Product selection */}
+          {/* SUCCESS / CANCEL BANNERS (Stripe) */}
+          {status === 'success' && (
+            <div
+              style={{
+                margin: '10px 0 16px',
+                padding: '12px 16px',
+                borderRadius: '10px',
+                background:
+                  'linear-gradient(135deg, rgba(16,185,129,0.18), rgba(5,150,105,0.25))',
+                border: '1px solid rgba(16,185,129,0.7)',
+                color: 'var(--text)',
+                fontSize: 14,
+              }}
+            >
+              <strong
+                style={{
+                  display: 'block',
+                  marginBottom: 4,
+                }}
+              >
+                Payment Successful
+              </strong>
+              Your payment has been processed successfully. Your order
+              details will be reviewed and verified as research-use-only
+              materials. If you have any questions about your order,
+              please contact{' '}
+              <a
+                href="mailto:peptidestream@gmail.com"
+                style={{ color: 'var(--accent)' }}
+              >
+                peptidestream@gmail.com
+              </a>
+              .
+            </div>
+          )}
+
+          {status === 'cancel' && (
+            <div
+              style={{
+                margin: '10px 0 16px',
+                padding: '12px 16px',
+                borderRadius: '10px',
+                background:
+                  'linear-gradient(135deg, rgba(248,187,89,0.18), rgba(245,158,11,0.18))',
+                border: '1px solid rgba(245,158,11,0.7)',
+                color: 'var(--text)',
+                fontSize: 14,
+              }}
+            >
+              <strong
+                style={{
+                  display: 'block',
+                  marginBottom: 4,
+                }}
+              >
+                Payment Canceled
+              </strong>
+              Your Stripe checkout session was canceled before
+              completion. You may start payment again using the Stripe
+              or Venmo buttons inside your cart, or reach out to{' '}
+              <a
+                href="mailto:peptidestream@gmail.com"
+                style={{ color: 'var(--accent)' }}
+              >
+                peptidestream@gmail.com
+              </a>{' '}
+              if you need assistance.
+            </div>
+          )}
+
+          {/* Product selection – order form lives in the cart */}
           <section className="card">
             <h2>Order Peptides</h2>
 
@@ -633,7 +727,7 @@ export default function Store() {
                         Pay with Card (Stripe)
                       </button>
 
-                      {/* 2) Venmo payment */}
+                      {/* 2) Venmo payment with deep link + fallback */}
                       <button
                         type="button"
                         className="btn"
@@ -659,8 +753,13 @@ export default function Store() {
                             return
                           }
 
-                          // Mobile-friendly: navigate in the same tab
-                          window.location.href = payHref
+                          // Try to open Venmo app first
+                          window.location.href = venmoDeepLink
+
+                          // Fallback to web Venmo if app doesn't open
+                          setTimeout(() => {
+                            window.location.href = payHref
+                          }, 800)
                         }}
                         style={{
                           marginTop: 8,
