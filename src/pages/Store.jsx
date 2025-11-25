@@ -81,6 +81,13 @@ export default function Store() {
     [qty]
   )
 
+  // 🔔 Broadcast cartCount to nav
+  useEffect(() => {
+    window.dispatchEvent(
+      new CustomEvent('cart-count', { detail: cartCount })
+    )
+  }, [cartCount])
+
   // Venmo payment link
   const payHref = useMemo(() => {
     const base = 'https://account.venmo.com/u/Ryanharper38'
@@ -304,104 +311,16 @@ export default function Store() {
             Laboratory research-use only. Not for human consumption.
           </p>
 
-          {/* Cart toggle button */}
-          <div className="cart-toggle">
-            <button
-              type="button"
-              className="btn cart-toggle-btn"
-              disabled={cartCount === 0}
-              onClick={() => setCartOpen(true)}
-            >
-              🛒 Cart{cartCount > 0 ? ` (${cartCount})` : ''}
-            </button>
-          </div>
+          {/* Product selection */}
+          <section className="card">
+            <h2>Order Peptides</h2>
 
-          {/* SUCCESS / CANCEL BANNERS */}
-          {status === 'success' && (
-            <div
+            <h3
               style={{
-                margin: '10px 0 16px',
-                padding: '12px 16px',
-                borderRadius: '10px',
-                background:
-                  'linear-gradient(135deg, rgba(16,185,129,0.18), rgba(5,150,105,0.25))',
-                border: '1px solid rgba(16,185,129,0.7)',
-                color: 'var(--text)',
-                fontSize: 14,
+                marginTop: 16,
+                marginBottom: 4,
               }}
             >
-              <strong style={{ display: 'block', marginBottom: 4 }}>
-                Payment Successful
-              </strong>
-              Your payment has been processed successfully. Your order
-              details will be reviewed and verified as research-use-only
-              materials. If you have any questions about your order,
-              please contact{' '}
-              <a
-                href="mailto:peptidestream@gmail.com"
-                style={{ color: 'var(--accent)' }}
-              >
-                peptidestream@gmail.com
-              </a>
-              .
-            </div>
-          )}
-
-          {status === 'cancel' && (
-            <div
-              style={{
-                margin: '10px 0 16px',
-                padding: '12px 16px',
-                borderRadius: '10px',
-                background:
-                  'linear-gradient(135deg, rgba(248,187,89,0.18), rgba(245,158,11,0.18))',
-                border: '1px solid rgba(245,158,11,0.7)',
-                color: 'var(--text)',
-                fontSize: 14,
-              }}
-            >
-              <strong style={{ display: 'block', marginBottom: 4 }}>
-                Payment Canceled
-              </strong>
-              Your Stripe checkout session was canceled before
-              completion. You may start payment again using the Stripe
-              or Venmo buttons inside your cart, or reach out to{' '}
-              <a
-                href="mailto:peptidestream@gmail.com"
-                style={{ color: 'var(--accent)' }}
-              >
-                peptidestream@gmail.com
-              </a>{' '}
-              if you need assistance.
-            </div>
-          )}
-
-
-          {/* Main order form */}
-          <form className="card" onSubmit={handleSubmit}>
-            <h2>Order Form</h2>
-
-            <div className="field-row">
-              <label htmlFor="name">Full Name</label>
-              <input id="name" name="name" type="text" required />
-            </div>
-
-            <div className="field-row">
-              <label htmlFor="phone">Phone</label>
-              <input id="phone" name="phone" type="tel" required />
-            </div>
-
-            <div className="field-row">
-              <label htmlFor="email">Email</label>
-              <input id="email" name="email" type="email" required />
-            </div>
-
-            <div className="field-row">
-              <label htmlFor="address">Shipping Address</label>
-              <textarea id="address" name="address" rows="3" required />
-            </div>
-
-            <h3 style={{ marginTop: 16, marginBottom: 4 }}>
               Select Products
             </h3>
             <p
@@ -414,7 +333,7 @@ export default function Store() {
             >
               Use the + / – buttons on each product card to add items to
               your cart. When you&apos;re ready, open your cart to
-              review and pay.
+              review your order and choose a payment method.
             </p>
 
             {/* Category filters (show only if there is more than "All") */}
@@ -448,41 +367,13 @@ export default function Store() {
                 />
               ))}
             </div>
-
-            <label
-              className="agree-line"
-              style={{ marginTop: 12, display: 'flex', gap: 8 }}
-            >
-              <input id="agree" type="checkbox" required />
-              <span>
-                I confirm I am 21+ and purchasing solely for lawful
-                laboratory research use. I agree to the{' '}
-                <a href="/terms" target="_blank" rel="noreferrer">
-                  Terms &amp; Conditions of Sale
-                </a>
-                .
-              </span>
-            </label>
-
-            <p
-              style={{
-                fontSize: 12,
-                color: 'var(--muted)',
-                marginTop: 10,
-              }}
-            >
-              To complete payment, open your cart using the{' '}
-              <strong>Cart</strong> button at the top of this page or
-              the cart icon in the navigation bar.
-            </p>
-          </form>
+          </section>
 
           <section className="info">
             <p className="global-disclaimer">
-              All products are for laboratory research-use only. Not
-              for human consumption, nor medical, veterinary, or
-              household uses. See{' '}
-              <a href="/terms">Terms &amp; Conditions</a>.
+              All products are for laboratory research-use only. Not for
+              human consumption, nor medical, veterinary, or household
+              uses. See <a href="/terms">Terms &amp; Conditions</a>.
             </p>
           </section>
 
@@ -511,7 +402,7 @@ export default function Store() {
                 {cartItems.length === 0 ? (
                   <p className="cart-empty">
                     Your cart is empty. Add peptides using the + buttons
-                    on the order form.
+                    on the order section.
                   </p>
                 ) : (
                   <>
@@ -591,11 +482,61 @@ export default function Store() {
                       Clear Cart
                     </button>
 
+                    {/* Order details + agreement INSIDE the cart */}
+                    <div className="cart-form">
+                      <div className="field-row">
+                        <label htmlFor="name">Full Name</label>
+                        <input id="name" name="name" type="text" required />
+                      </div>
+
+                      <div className="field-row">
+                        <label htmlFor="phone">Phone</label>
+                        <input id="phone" name="phone" type="tel" required />
+                      </div>
+
+                      <div className="field-row">
+                        <label htmlFor="email">Email</label>
+                        <input id="email" name="email" type="email" required />
+                      </div>
+
+                      <div className="field-row">
+                        <label htmlFor="address">Shipping Address</label>
+                        <textarea
+                          id="address"
+                          name="address"
+                          rows="3"
+                          required
+                        />
+                      </div>
+
+                      <label
+                        className="agree-line"
+                        style={{
+                          marginTop: 12,
+                          display: 'flex',
+                          gap: 8,
+                        }}
+                      >
+                        <input id="agree" type="checkbox" required />
+                        <span>
+                          I confirm I am 21+ and purchasing solely for lawful
+                          laboratory research use. I agree to the{' '}
+                          <a
+                            href="/terms"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Terms &amp; Conditions of Sale
+                          </a>
+                          .
+                        </span>
+                      </label>
+                    </div>
+
                     <p className="cart-note">
-                      Make sure your name, email, phone, shipping
-                      address, and the research-use agreement checkbox
-                      are completed in the order form on the page
-                      before paying.
+                      Enter your contact and shipping details above, confirm the
+                      research-use agreement, then choose a payment option
+                      below.
                     </p>
 
                     <div className="actions">

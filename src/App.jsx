@@ -13,10 +13,23 @@ export default function App() {
 
   const isStoreLike =
     location.pathname === '/store' || location.pathname === '/'
+
   const showBanner = isStoreLike
+
+  // ⭐ LIVE CART COUNT FROM STORE
+  const [navCartCount, setNavCartCount] = React.useState(0)
+
+  React.useEffect(() => {
+    function handleCount(e) {
+      setNavCartCount(e.detail || 0)
+    }
+    window.addEventListener('cart-count', handleCount)
+    return () => window.removeEventListener('cart-count', handleCount)
+  }, [])
 
   return (
     <>
+      {/* HEADER / LOGO */}
       <header className="site-header">
         <div className="logo-wrap">
           <button
@@ -38,6 +51,7 @@ export default function App() {
         </div>
       </header>
 
+      {/* BANNER ON STORE PAGE */}
       {showBanner && (
         <>
           <div className="promo-bar">
@@ -53,30 +67,23 @@ export default function App() {
         </>
       )}
 
-      {/* NAV: only Store + Contact now */}
+      {/* NAV */}
       <nav className="main-nav" aria-label="Main Navigation">
         <div className="main-nav-inner">
-          {/* Store / Cart button */}
-          <button
-            type="button"
-            className={isStoreLike ? 'nav-link active' : 'nav-link'}
-            onClick={() => {
-              if (location.pathname === '/store') {
-                // Tell the Store page to open the cart drawer
-                window.dispatchEvent(new CustomEvent('open-cart'))
-              } else {
-                navigate('/store')
-              }
-            }}
-          >
-            <img
-              src="/assets/shopping-cart.svg"
-              alt=""
-              className="nav-icon"
-            />
-            Store
-          </button>
 
+          {/* STORE */}
+          <Link
+            to="/store"
+            className={
+              location.pathname === '/store' || location.pathname === '/'
+                ? 'nav-link active'
+                : 'nav-link'
+            }
+          >
+            Store
+          </Link>
+
+          {/* CONTACT */}
           <Link
             to="/contact"
             className={
@@ -87,11 +94,32 @@ export default function App() {
           >
             Contact
           </Link>
+
+          {/* CART (with live count) */}
+          <button
+            type="button"
+            className="nav-link"
+            onClick={() => {
+              if (location.pathname !== '/store') {
+                navigate('/store')
+                setTimeout(() => {
+                  window.dispatchEvent(new Event('open-cart'))
+                }, 50)
+              } else {
+                window.dispatchEvent(new Event('open-cart'))
+              }
+            }}
+          >
+            🛒 Cart{navCartCount > 0 ? ` (${navCartCount})` : ''}
+          </button>
+
         </div>
       </nav>
 
+      {/* PAGE CONTENT */}
       <Outlet />
 
+      {/* FOOTER */}
       <Footer />
     </>
   )
