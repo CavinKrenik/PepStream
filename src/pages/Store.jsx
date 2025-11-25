@@ -88,7 +88,7 @@ export default function Store() {
     )
   }, [cartCount])
 
-  // Venmo payment link
+  // Venmo payment link (web URL, mobile-safe navigation)
   const payHref = useMemo(() => {
     const base = 'https://account.venmo.com/u/Ryanharper38'
     if (grand <= 0) return base
@@ -106,13 +106,6 @@ export default function Store() {
     const handler = () => setCartOpen(true)
     window.addEventListener('open-cart', handler)
     return () => window.removeEventListener('open-cart', handler)
-  }, [])
-
-  // Read ?status=success / ?status=cancel from URL (for banners)
-  const status = useMemo(() => {
-    if (typeof window === 'undefined') return null
-    const params = new URLSearchParams(window.location.search)
-    return params.get('status')
   }, [])
 
   const inc = id => {
@@ -666,11 +659,8 @@ export default function Store() {
                             return
                           }
 
-                          window.open(
-                            payHref,
-                            '_blank',
-                            'noopener,noreferrer'
-                          )
+                          // Mobile-friendly: navigate in the same tab
+                          window.location.href = payHref
                         }}
                         style={{
                           marginTop: 8,
