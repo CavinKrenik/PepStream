@@ -3,7 +3,7 @@ import { PRODUCTS } from '../data/products'
 import ProductCard from '../components/ProductCard'
 
 // pause/unpause the store
-const SITE_PAUSED = false 
+const SITE_PAUSED = false
 
 export default function Store() {
   // Track quantity per product
@@ -31,6 +31,17 @@ export default function Store() {
 
   const grand = subtotal + shipping
 
+  // Derived cart items for display
+  const cartItems = useMemo(
+    () =>
+      PRODUCTS.filter(p => (qty[p.id] || 0) > 0).map(p => ({
+        ...p,
+        qty: qty[p.id],
+        line: (qty[p.id] || 0) * p.price,
+      })),
+    [qty]
+  )
+
   // Venmo payment link
   const payHref = useMemo(() => {
     const base = 'https://account.venmo.com/u/Ryanharper38'
@@ -56,7 +67,10 @@ export default function Store() {
   }
 
   const dec = id => {
-    setQty(prev => ({ ...prev, [id]: Math.max(0, (prev[id] || 0) - 1) }))
+    setQty(prev => ({
+      ...prev,
+      [id]: Math.max(0, (prev[id] || 0) - 1),
+    }))
   }
 
   // Shared helper: send the order via SendGrid from the form fields
@@ -220,8 +234,7 @@ export default function Store() {
             offline.
           </p>
           <p>
-            For assistance or to inquire about research materials,
-            email
+            For assistance or to inquire about research materials, email
             <a
               href="mailto:peptidestream@gmail.com"
               style={{ color: '#34d399', marginLeft: '4px' }}
@@ -366,6 +379,22 @@ export default function Store() {
               <textarea id="address" name="address" rows="3" required />
             </div>
 
+            {/* 1) Product selection area */}
+            <h3 style={{ marginTop: 16, marginBottom: 4 }}>
+              Select Products
+            </h3>
+            <p
+              style={{
+                margin: 0,
+                fontSize: 13,
+                color: 'var(--muted)',
+                marginBottom: 8,
+              }}
+            >
+              Use the + / – buttons on each product card to add items to
+              your cart.
+            </p>
+
             <div className="products">
               {PRODUCTS.map(p => (
                 <ProductCard
@@ -378,18 +407,66 @@ export default function Store() {
               ))}
             </div>
 
-            <div className="totals">
-              <div className="line">
-                <span>Subtotal</span>
-                <span>{fmt(subtotal)}</span>
-              </div>
-              <div className="line">
-                <span>Shipping</span>
-                <span>{fmt(shipping)}</span>
-              </div>
-              <div className="line total">
-                <span>Total</span>
-                <span>{fmt(grand)}</span>
+            {/* 2) Cart summary */}
+            <div className="cart">
+              <h3>Your Cart</h3>
+
+              {cartItems.length === 0 ? (
+                <p className="cart-empty">
+                  Your cart is empty. Add peptides using the + buttons
+                  above.
+                </p>
+              ) : (
+                <ul className="cart-items">
+                  {cartItems.map(item => (
+                    <li key={item.id} className="cart-row">
+                      <div className="cart-row-main">
+                        <span className="cart-title">
+                          {item.title}
+                        </span>
+                        <span className="cart-meta">
+                          {item.qty} × {fmt(item.price)}
+                        </span>
+                      </div>
+                      <div className="cart-row-controls">
+                        <button
+                          type="button"
+                          className="btn qty-btn"
+                          onClick={() => dec(item.id)}
+                        >
+                          –
+                        </button>
+                        <span className="cart-qty">{item.qty}</span>
+                        <button
+                          type="button"
+                          className="btn qty-btn"
+                          onClick={() => inc(item.id)}
+                        >
+                          +
+                        </button>
+                        <span className="cart-line">
+                          {fmt(item.line)}
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {/* 3) Totals inside the cart */}
+              <div className="totals">
+                <div className="line">
+                  <span>Subtotal</span>
+                  <span>{fmt(subtotal)}</span>
+                </div>
+                <div className="line">
+                  <span>Shipping</span>
+                  <span>{fmt(shipping)}</span>
+                </div>
+                <div className="line total">
+                  <span>Total</span>
+                  <span>{fmt(grand)}</span>
+                </div>
               </div>
             </div>
 
