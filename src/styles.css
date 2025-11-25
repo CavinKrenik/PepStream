@@ -479,3 +479,65 @@ textarea {
 .cart-line {
   font-weight: 600;
 }
+
+/* Cart toggle button above the form */
+.cart-toggle {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.cart-toggle-btn {
+  font-size: 13px;
+  padding: 8px 14px;
+  background: #0b1220;
+  border: 1px solid var(--line);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.cart-toggle-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Slide-out cart drawer */
+.cart-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.85);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 40;
+}
+
+.cart-drawer {
+  width: min(380px, 100%);
+  background: #020617;
+  border-left: 1px solid var(--line);
+  padding: 16px 18px 20px;
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.cart-close {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.cart-note {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 10px;
+}

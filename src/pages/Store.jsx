@@ -11,6 +11,9 @@ export default function Store() {
     Object.fromEntries(PRODUCTS.map(p => [p.id, 0]))
   )
 
+  // Cart drawer open/close
+  const [cartOpen, setCartOpen] = useState(false)
+
   const fmt = n => '$' + n.toFixed(2)
 
   // Subtotal
@@ -31,7 +34,7 @@ export default function Store() {
 
   const grand = subtotal + shipping
 
-  // Derived cart items for display
+  // Cart items + count
   const cartItems = useMemo(
     () =>
       PRODUCTS.filter(p => (qty[p.id] || 0) > 0).map(p => ({
@@ -39,6 +42,15 @@ export default function Store() {
         qty: qty[p.id],
         line: (qty[p.id] || 0) * p.price,
       })),
+    [qty]
+  )
+
+  const cartCount = useMemo(
+    () =>
+      Object.values(qty).reduce(
+        (total, v) => total + (v || 0),
+        0
+      ),
     [qty]
   )
 
@@ -192,9 +204,9 @@ export default function Store() {
     return { name, phone, email, address }
   }
 
-  // Email-only submit
+  // Email-only submit (can be called from a button)
   async function handleSubmit(e) {
-    e.preventDefault()
+    if (e) e.preventDefault()
     try {
       await sendOrderEmail({
         showSuccessAlert: true,
@@ -251,6 +263,18 @@ export default function Store() {
             Laboratory research-use only. Not for human consumption.
           </p>
 
+          {/* Cart toggle button */}
+          <div className="cart-toggle">
+            <button
+              type="button"
+              className="btn cart-toggle-btn"
+              disabled={cartCount === 0}
+              onClick={() => setCartOpen(true)}
+            >
+              🛒 Cart{cartCount > 0 ? ` (${cartCount})` : ''}
+            </button>
+          </div>
+
           {/* ✅ SUCCESS / CANCEL BANNERS */}
           {status === 'success' && (
             <div
@@ -300,7 +324,7 @@ export default function Store() {
               </strong>
               Your Stripe checkout session was canceled before
               completion. You may start payment again using the Stripe
-              or Venmo buttons below, or reach out to{' '}
+              or Venmo buttons inside your cart, or reach out to{' '}
               <a
                 href="mailto:peptidestream@gmail.com"
                 style={{ color: 'var(--accent)' }}
@@ -330,20 +354,13 @@ export default function Store() {
             </strong>
             <br />
             <br />
-            Fill out the order form once, then choose how you would like
-            to complete your order:
+            1. Fill out the order form and select your research products.
             <br />
+            2. Click the <strong>Cart</strong> button to review your
+            items and totals.
             <br />
-            • <strong>Pay with Card (Stripe)</strong> – your order
-            details are emailed to PeptideStream and you&apos;re taken to
-            secure card checkout.
-            <br />
-            • <strong>Pay with Venmo</strong> – your order details are
-            emailed and your Venmo payment window opens.
-            <br />
-            • <strong>Submit Order via Email</strong> – sends the order
-            form to PeptideStream without starting payment (for manual
-            payment arrangements).
+            3. Complete payment inside the cart drawer using Stripe or
+            Venmo, or submit the order via email.
             <br />
             <br />
             For assistance, email us at{' '}
@@ -356,6 +373,7 @@ export default function Store() {
             .
           </div>
 
+          {/* Main order form (no pay buttons here now) */}
           <form className="card" onSubmit={handleSubmit}>
             <h2>Order Form</h2>
 
@@ -379,7 +397,6 @@ export default function Store() {
               <textarea id="address" name="address" rows="3" required />
             </div>
 
-            {/* 1) Product selection area */}
             <h3 style={{ marginTop: 16, marginBottom: 4 }}>
               Select Products
             </h3>
@@ -392,7 +409,8 @@ export default function Store() {
               }}
             >
               Use the + / – buttons on each product card to add items to
-              your cart.
+              your cart. When you&apos;re ready, click the Cart button
+              above to review and pay.
             </p>
 
             <div className="products">
@@ -405,69 +423,6 @@ export default function Store() {
                   onDec={() => dec(p.id)}
                 />
               ))}
-            </div>
-
-            {/* 2) Cart summary */}
-            <div className="cart">
-              <h3>Your Cart</h3>
-
-              {cartItems.length === 0 ? (
-                <p className="cart-empty">
-                  Your cart is empty. Add peptides using the + buttons
-                  above.
-                </p>
-              ) : (
-                <ul className="cart-items">
-                  {cartItems.map(item => (
-                    <li key={item.id} className="cart-row">
-                      <div className="cart-row-main">
-                        <span className="cart-title">
-                          {item.title}
-                        </span>
-                        <span className="cart-meta">
-                          {item.qty} × {fmt(item.price)}
-                        </span>
-                      </div>
-                      <div className="cart-row-controls">
-                        <button
-                          type="button"
-                          className="btn qty-btn"
-                          onClick={() => dec(item.id)}
-                        >
-                          –
-                        </button>
-                        <span className="cart-qty">{item.qty}</span>
-                        <button
-                          type="button"
-                          className="btn qty-btn"
-                          onClick={() => inc(item.id)}
-                        >
-                          +
-                        </button>
-                        <span className="cart-line">
-                          {fmt(item.line)}
-                        </span>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              {/* 3) Totals inside the cart */}
-              <div className="totals">
-                <div className="line">
-                  <span>Subtotal</span>
-                  <span>{fmt(subtotal)}</span>
-                </div>
-                <div className="line">
-                  <span>Shipping</span>
-                  <span>{fmt(shipping)}</span>
-                </div>
-                <div className="line total">
-                  <span>Total</span>
-                  <span>{fmt(grand)}</span>
-                </div>
-              </div>
             </div>
 
             <label
@@ -485,151 +440,16 @@ export default function Store() {
               </span>
             </label>
 
-            <div className="actions">
-              {/* 1) Stripe payment (auto-sends order email) */}
-              <button
-                type="button"
-                className="btn pay"
-                disabled={grand <= 0}
-                onClick={async () => {
-                  if (grand <= 0) {
-                    alert(
-                      'Add at least one product to enable card payment.'
-                    )
-                    return
-                  }
-
-                  let customer
-                  try {
-                    // Send order email silently (no extra popup here)
-                    customer = await sendOrderEmail({
-                      showSuccessAlert: false,
-                      paymentMethod: 'stripe',
-                    })
-                  } catch (err) {
-                    console.error(
-                      'Order email failed before Stripe',
-                      err
-                    )
-                    // sendOrderEmail already showed the error
-                    return
-                  }
-
-                  const { name, email, phone, address } = customer
-
-                  const payloadItems = PRODUCTS.map(p => ({
-                    id: p.id,
-                    title: p.title,
-                    price: p.price,
-                    qty: qty[p.id] || 0,
-                  })).filter(i => i.qty > 0)
-
-                  if (!payloadItems.length) {
-                    alert(
-                      'Please add at least one product before paying.'
-                    )
-                    return
-                  }
-
-                  try {
-                    const res = await fetch(
-                      '/.netlify/functions/create-checkout-session',
-                      {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          items: payloadItems,
-                          shipping,
-                          customer: { name, email, phone, address },
-                          researchUseConfirmed: true,
-                        }),
-                      }
-                    )
-
-                    const data = await res.json()
-
-                    if (!res.ok || data.error) {
-                      console.error(
-                        'Stripe session error',
-                        data.error
-                      )
-                      alert(
-                        'Error creating Stripe checkout session. Please try again or contact support.'
-                      )
-                      return
-                    }
-
-                    if (!data.url) {
-                      alert('Stripe did not return a checkout URL.')
-                      return
-                    }
-
-                    // Redirect directly to Checkout
-                    window.location.href = data.url
-                  } catch (err) {
-                    console.error('Stripe payment error', err)
-                    alert('Unexpected error starting payment.')
-                  }
-                }}
-              >
-                Pay with Card (Stripe)
-              </button>
-
-              {/* 2) Venmo payment (auto-sends order email) */}
-              <button
-                type="button"
-                className="btn"
-                disabled={grand <= 0}
-                onClick={async () => {
-                  if (grand <= 0) {
-                    alert(
-                      'Add at least one product before paying.'
-                    )
-                    return
-                  }
-
-                  try {
-                    await sendOrderEmail({
-                      showSuccessAlert: false,
-                      paymentMethod: 'venmo',
-                    })
-                  } catch (err) {
-                    console.error(
-                      'Order email failed before Venmo',
-                      err
-                    )
-                    return
-                  }
-
-                  window.open(
-                    payHref,
-                    '_blank',
-                    'noopener,noreferrer'
-                  )
-                }}
-                style={{
-                  marginTop: 8,
-                  background: '#3d95ce',
-                  color: 'white',
-                  fontWeight: 600,
-                }}
-              >
-                Pay with Venmo
-              </button>
-
-              {/* 3) Email-only order (no payment) */}
-              <button
-                type="submit"
-                className="btn"
-                style={{
-                  marginTop: 10,
-                  background:
-                    'linear-gradient(135deg,#10b981,#059669)',
-                }}
-              >
-                Submit Order via Email
-              </button>
-            </div>
+            <p
+              style={{
+                fontSize: 12,
+                color: 'var(--muted)',
+                marginTop: 10,
+              }}
+            >
+              To complete payment, open your cart using the{' '}
+              <strong>Cart</strong> button at the top of this page.
+            </p>
           </form>
 
           <section className="info">
@@ -640,6 +460,253 @@ export default function Store() {
               <a href="/terms">Terms &amp; Conditions</a>.
             </p>
           </section>
+
+          {/* 🛒 CART DRAWER */}
+          {cartOpen && (
+            <div
+              className="cart-overlay"
+              onClick={() => setCartOpen(false)}
+            >
+              <div
+                className="cart-drawer"
+                onClick={e => e.stopPropagation()}
+              >
+                <div className="cart-header">
+                  <h3>Cart</h3>
+                  <button
+                    type="button"
+                    className="cart-close"
+                    onClick={() => setCartOpen(false)}
+                    aria-label="Close cart"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                {cartItems.length === 0 ? (
+                  <p className="cart-empty">
+                    Your cart is empty. Add peptides using the + buttons
+                    on the order form.
+                  </p>
+                ) : (
+                  <>
+                    <ul className="cart-items">
+                      {cartItems.map(item => (
+                        <li key={item.id} className="cart-row">
+                          <div className="cart-row-main">
+                            <span className="cart-title">
+                              {item.title}
+                            </span>
+                            <span className="cart-meta">
+                              {item.qty} × {fmt(item.price)}
+                            </span>
+                          </div>
+                          <div className="cart-row-controls">
+                            <button
+                              type="button"
+                              className="btn qty-btn"
+                              onClick={() => dec(item.id)}
+                            >
+                              –
+                            </button>
+                            <span className="cart-qty">
+                              {item.qty}
+                            </span>
+                            <button
+                              type="button"
+                              className="btn qty-btn"
+                              onClick={() => inc(item.id)}
+                            >
+                              +
+                            </button>
+                            <span className="cart-line">
+                              {fmt(item.line)}
+                            </span>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <div className="totals">
+                      <div className="line">
+                        <span>Subtotal</span>
+                        <span>{fmt(subtotal)}</span>
+                      </div>
+                      <div className="line">
+                        <span>Shipping</span>
+                        <span>{fmt(shipping)}</span>
+                      </div>
+                      <div className="line total">
+                        <span>Total</span>
+                        <span>{fmt(grand)}</span>
+                      </div>
+                    </div>
+
+                    <p className="cart-note">
+                      Make sure your name, email, phone, shipping
+                      address, and the research-use agreement checkbox
+                      are completed in the order form on the page
+                      before paying.
+                    </p>
+
+                    <div className="actions">
+                      {/* 1) Stripe payment */}
+                      <button
+                        type="button"
+                        className="btn pay"
+                        disabled={grand <= 0}
+                        onClick={async () => {
+                          if (grand <= 0) {
+                            alert(
+                              'Add at least one product to enable card payment.'
+                            )
+                            return
+                          }
+
+                          let customer
+                          try {
+                            customer = await sendOrderEmail({
+                              showSuccessAlert: false,
+                              paymentMethod: 'stripe',
+                            })
+                          } catch (err) {
+                            console.error(
+                              'Order email failed before Stripe',
+                              err
+                            )
+                            return
+                          }
+
+                          const { name, email, phone, address } =
+                            customer
+
+                          const payloadItems = PRODUCTS.map(p => ({
+                            id: p.id,
+                            title: p.title,
+                            price: p.price,
+                            qty: qty[p.id] || 0,
+                          })).filter(i => i.qty > 0)
+
+                          if (!payloadItems.length) {
+                            alert(
+                              'Please add at least one product before paying.'
+                            )
+                            return
+                          }
+
+                          try {
+                            const res = await fetch(
+                              '/.netlify/functions/create-checkout-session',
+                              {
+                                method: 'POST',
+                                headers: {
+                                  'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                  items: payloadItems,
+                                  shipping,
+                                  customer: {
+                                    name,
+                                    email,
+                                    phone,
+                                    address,
+                                  },
+                                  researchUseConfirmed: true,
+                                }),
+                              }
+                            )
+
+                            const data = await res.json()
+
+                            if (!res.ok || data.error) {
+                              console.error(
+                                'Stripe session error',
+                                data.error
+                              )
+                              alert(
+                                'Error creating Stripe checkout session. Please try again or contact support.'
+                              )
+                              return
+                            }
+
+                            if (!data.url) {
+                              alert(
+                                'Stripe did not return a checkout URL.'
+                              )
+                              return
+                            }
+
+                            window.location.href = data.url
+                          } catch (err) {
+                            console.error('Stripe payment error', err)
+                            alert('Unexpected error starting payment.')
+                          }
+                        }}
+                      >
+                        Pay with Card (Stripe)
+                      </button>
+
+                      {/* 2) Venmo payment */}
+                      <button
+                        type="button"
+                        className="btn"
+                        disabled={grand <= 0}
+                        onClick={async () => {
+                          if (grand <= 0) {
+                            alert(
+                              'Add at least one product before paying.'
+                            )
+                            return
+                          }
+
+                          try {
+                            await sendOrderEmail({
+                              showSuccessAlert: false,
+                              paymentMethod: 'venmo',
+                            })
+                          } catch (err) {
+                            console.error(
+                              'Order email failed before Venmo',
+                              err
+                            )
+                            return
+                          }
+
+                          window.open(
+                            payHref,
+                            '_blank',
+                            'noopener,noreferrer'
+                          )
+                        }}
+                        style={{
+                          marginTop: 8,
+                          background: '#3d95ce',
+                          color: 'white',
+                          fontWeight: 600,
+                        }}
+                      >
+                        Pay with Venmo
+                      </button>
+
+                      {/* 3) Email-only order */}
+                      <button
+                        type="button"
+                        className="btn"
+                        style={{
+                          marginTop: 10,
+                          background:
+                            'linear-gradient(135deg,#10b981,#059669)',
+                        }}
+                        onClick={() => handleSubmit()}
+                      >
+                        Submit Order via Email (No Payment)
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
         </>
       )}
     </main>
