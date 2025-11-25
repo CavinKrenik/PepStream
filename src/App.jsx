@@ -1,23 +1,40 @@
 import React from 'react'
-import { Link, Outlet, useLocation } from 'react-router-dom'
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom'
 import Footer from './components/Footer.jsx'
 
 export default function App() {
   const location = useLocation()
-  const showBanner =
-    location.pathname === '/' || location.pathname === '/store'
+  const navigate = useNavigate()
+
+  const isStoreLike =
+    location.pathname === '/store' || location.pathname === '/'
+  const showBanner = isStoreLike
 
   return (
     <>
       <header className="site-header">
         <div className="logo-wrap">
-          <Link to="/store">
+          <button
+            type="button"
+            onClick={() => navigate('/store')}
+            style={{
+              border: 'none',
+              background: 'transparent',
+              padding: 0,
+              cursor: 'pointer',
+            }}
+          >
             <img
               className="logo"
               src="/assets/logo.png"
               alt="PeptideStream Logo"
             />
-          </Link>
+          </button>
         </div>
       </header>
 
@@ -25,7 +42,8 @@ export default function App() {
         <>
           <div className="promo-bar">
             <div className="promo-scroll">
-              Orders over $150 ship FREE. Orders under $150 incur a flat $15 shipping fee.
+              Orders over $150 ship FREE. Orders under $150 incur a flat
+              $15 shipping fee.
             </div>
           </div>
 
@@ -35,18 +53,24 @@ export default function App() {
         </>
       )}
 
-      {/* 🔽 NAV – now renders on every page, and appears below ad.png on Store/Home */}
+      {/* NAV: shows on all pages, sits under banner on Store/Home */}
       <nav className="main-nav" aria-label="Main Navigation">
         <div className="main-nav-inner">
-
-          <Link
-            to="/store"
+          {/* Store / Cart button */}
+          <button
+            type="button"
             className={
-              location.pathname === '/store' ||
-              location.pathname === '/'
-                ? 'nav-link active'
-                : 'nav-link'
+              isStoreLike ? 'nav-link active' : 'nav-link'
             }
+            onClick={() => {
+              if (location.pathname === '/store') {
+                // Tell the Store page to open the cart drawer
+                window.dispatchEvent(new CustomEvent('open-cart'))
+              } else {
+                // Navigate to /store
+                navigate('/store')
+              }
+            }}
           >
             <img
               src="/assets/shopping-cart.svg"
@@ -54,12 +78,14 @@ export default function App() {
               className="nav-icon"
             />
             Store
-          </Link>
+          </button>
 
           <Link
             to="/terms"
             className={
-              location.pathname === '/terms' ? 'nav-link active' : 'nav-link'
+              location.pathname === '/terms'
+                ? 'nav-link active'
+                : 'nav-link'
             }
           >
             Terms
@@ -108,7 +134,6 @@ export default function App() {
           >
             Contact
           </Link>
-
         </div>
       </nav>
 

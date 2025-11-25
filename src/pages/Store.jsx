@@ -1,4 +1,8 @@
-import React, { useMemo, useState } from 'react'
+import React, {
+  useMemo,
+  useState,
+  useEffect,
+} from 'react'
 import { PRODUCTS } from '../data/products'
 import ProductCard from '../components/ProductCard'
 
@@ -13,6 +17,9 @@ export default function Store() {
 
   // Cart drawer open/close
   const [cartOpen, setCartOpen] = useState(false)
+
+  // Category filter
+  const [activeCategory, setActiveCategory] = useState('All')
 
   const fmt = n => '$' + n.toFixed(2)
 
@@ -33,6 +40,26 @@ export default function Store() {
   }, [subtotal])
 
   const grand = subtotal + shipping
+
+  // Categories (only shown if you add p.category to products)
+  const categories = useMemo(() => {
+    const set = new Set()
+    PRODUCTS.forEach(p => {
+      if (p.category) set.add(p.category)
+    })
+    return ['All', ...Array.from(set)]
+  }, [])
+
+  // Products filtered by category
+  const filteredProducts = useMemo(
+    () =>
+      PRODUCTS.filter(
+        p =>
+          activeCategory === 'All' ||
+          p.category === activeCategory
+      ),
+    [activeCategory]
+  )
 
   // Cart items + count
   const cartItems = useMemo(
@@ -67,6 +94,13 @@ export default function Store() {
     return `${base}?${params.toString()}`
   }, [grand])
 
+  // Listen for global "open-cart" events (from nav)
+  useEffect(() => {
+    const handler = () => setCartOpen(true)
+    window.addEventListener('open-cart', handler)
+    return () => window.removeEventListener('open-cart', handler)
+  }, [])
+
   // Read ?status=success / ?status=cancel from URL (for banners)
   const status = useMemo(() => {
     if (typeof window === 'undefined') return null
@@ -83,6 +117,14 @@ export default function Store() {
       ...prev,
       [id]: Math.max(0, (prev[id] || 0) - 1),
     }))
+  }
+
+  const clearItem = id => {
+    setQty(prev => ({ ...prev, [id]: 0 }))
+  }
+
+  const clearCart = () => {
+    setQty(Object.fromEntries(PRODUCTS.map(p => [p.id, 0])))
   }
 
   // Shared helper: send the order via SendGrid from the form fields
@@ -179,7 +221,7 @@ export default function Store() {
         })),
         totals: { subtotal, shipping, grand },
         researchUseConfirmed: true,
-        paymentMethod, // extra info for your Netlify function/email
+        paymentMethod,
         orderText,
       }),
     })
@@ -204,9 +246,9 @@ export default function Store() {
     return { name, phone, email, address }
   }
 
-  // Email-only submit (can be called from a button)
+  // Email-only submit; can be called from button without event
   async function handleSubmit(e) {
-    if (e) e.preventDefault()
+    if (e && e.preventDefault) e.preventDefault()
     try {
       await sendOrderEmail({
         showSuccessAlert: true,
@@ -214,7 +256,6 @@ export default function Store() {
       })
     } catch (err) {
       console.error('handleSubmit error', err)
-      // Validation and alerts are already handled inside sendOrderEmail
     }
   }
 
@@ -275,7 +316,7 @@ export default function Store() {
             </button>
           </div>
 
-          {/* ✅ SUCCESS / CANCEL BANNERS */}
+          {/* SUCCESS / CANCEL BANNERS */}
           {status === 'success' && (
             <div
               style={{
@@ -354,10 +395,11 @@ export default function Store() {
             </strong>
             <br />
             <br />
-            1. Fill out the order form and select your research products.
+            1. Fill out the order form and select your research
+            products.
             <br />
-            2. Click the <strong>Cart</strong> button to review your
-            items and totals.
+            2. Click the <strong>Cart</strong> button (or the cart icon
+            in the navigation) to review your items and totals.
             <br />
             3. Complete payment inside the cart drawer using Stripe or
             Venmo, or submit the order via email.
@@ -373,7 +415,7 @@ export default function Store() {
             .
           </div>
 
-          {/* Main order form (no pay buttons here now) */}
+          {/* Main order form */}
           <form className="card" onSubmit={handleSubmit}>
             <h2>Order Form</h2>
 
@@ -409,12 +451,32 @@ export default function Store() {
               }}
             >
               Use the + / – buttons on each product card to add items to
-              your cart. When you&apos;re ready, click the Cart button
-              above to review and pay.
+              your cart. When you&apos;re ready, open your cart to
+              review and pay.
             </p>
 
+            {/* Category filters (show only if there is more than "All") */}
+            {categories.length > 1 && (
+              <div className="category-filters">
+                {categories.map(cat => (
+                  <button
+                    key={cat}
+                    type="button"
+                    className={
+                      cat === activeCategory
+                        ? 'category-pill active'
+                        : 'category-pill'
+                    }
+                    onClick={() => setActiveCategory(cat)}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            )}
+
             <div className="products">
-              {PRODUCTS.map(p => (
+              {filteredProducts.map(p => (
                 <ProductCard
                   key={p.id}
                   product={p}
@@ -448,7 +510,8 @@ export default function Store() {
               }}
             >
               To complete payment, open your cart using the{' '}
-              <strong>Cart</strong> button at the top of this page.
+              <strong>Cart</strong> button at the top of this page or
+              the cart icon in the navigation bar.
             </p>
           </form>
 
@@ -494,12 +557,21 @@ export default function Store() {
                       {cartItems.map(item => (
                         <li key={item.id} className="cart-row">
                           <div className="cart-row-main">
-                            <span className="cart-title">
-                              {item.title}
-                            </span>
-                            <span className="cart-meta">
-                              {item.qty} × {fmt(item.price)}
-                            </span>
+                            <div className="cart-thumb-wrap">
+                              <img
+                                src={item.img}
+                                alt={item.title}
+                                className="cart-thumb"
+                              />
+                            </div>
+                            <div className="cart-text">
+                              <span className="cart-title">
+                                {item.title}
+                              </span>
+                              <span className="cart-meta">
+                                {item.qty} × {fmt(item.price)}
+                              </span>
+                            </div>
                           </div>
                           <div className="cart-row-controls">
                             <button
@@ -522,6 +594,13 @@ export default function Store() {
                             <span className="cart-line">
                               {fmt(item.line)}
                             </span>
+                            <button
+                              type="button"
+                              className="cart-remove"
+                              onClick={() => clearItem(item.id)}
+                            >
+                              Remove
+                            </button>
                           </div>
                         </li>
                       ))}
@@ -541,6 +620,14 @@ export default function Store() {
                         <span>{fmt(grand)}</span>
                       </div>
                     </div>
+
+                    <button
+                      type="button"
+                      className="btn cart-clear"
+                      onClick={clearCart}
+                    >
+                      Clear Cart
+                    </button>
 
                     <p className="cart-note">
                       Make sure your name, email, phone, shipping
@@ -577,8 +664,12 @@ export default function Store() {
                             return
                           }
 
-                          const { name, email, phone, address } =
-                            customer
+                          const {
+                            name,
+                            email,
+                            phone,
+                            address,
+                          } = customer
 
                           const payloadItems = PRODUCTS.map(p => ({
                             id: p.id,
