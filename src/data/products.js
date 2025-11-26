@@ -234,6 +234,7 @@ export const PRODUCTS = [
     id: 'pt141',
     title: 'PT-141 10mg',
     price: 120.0,
+    unavailable: true,
     img: '/assets/placeholder.png',
     coa: null,
     badge: 'Out of Stock',

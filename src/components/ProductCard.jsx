@@ -47,31 +47,35 @@ export default function ProductCard({ product, qty, onInc, onDec }) {
         </div>
 
         {/* qty controls (don't toggle card when using them) */}
-        <div
-          className="qty"
-          onClick={e => e.stopPropagation()}
-        >
-          <button
-            type="button"
-            className="btn qty-btn"
-            onClick={onDec}
-          >
-            −
-          </button>
-          <input
-            type="number"
-            className="qty-input"
-            min="0"
-            value={qty}
-            readOnly
-          />
-          <button
-            type="button"
-            className="btn qty-btn"
-            onClick={onInc}
-          >
-            +
-          </button>
+        <div className="qty" onClick={e => e.stopPropagation()}>
+          {product.unavailable ? (
+            <span
+              style={{
+                fontSize: '13px',
+                fontWeight: 600,
+                color: '#ef4444', // red-500
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Out of Stock
+            </span>
+          ) : (
+            <>
+              <button type="button" className="btn qty-btn" onClick={onDec}>
+                −
+              </button>
+              <input
+                type="number"
+                className="qty-input"
+                min="0"
+                value={qty}
+                readOnly
+              />
+              <button type="button" className="btn qty-btn" onClick={onInc}>
+                +
+              </button>
+            </>
+          )}
         </div>
       </div>
 
