@@ -51,7 +51,7 @@ export function CartProvider({ children }) {
 
   const shipping = useMemo(() => {
     if (subtotal === 0) return 0
-    return subtotal > 150 ? 0 : 15
+    return 15
   }, [subtotal])
 
   const grand = subtotal + shipping

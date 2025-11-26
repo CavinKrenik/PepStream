@@ -37,7 +37,7 @@ export default function ResearchInfo() {
             >
                 The compounds listed below are provided strictly for <strong>laboratory research use by qualified professionals</strong>.
                 No medical, diagnostic, therapeutic, or human use is intended or implied.
-                Certificates of Analysis (COAs) are available upon request.
+                Certificates of Analysis (COAs) are available upon request for $250 and e-mail peptidestream@gmail.com.
             </div>
 
             <div className="research-layout">
@@ -129,7 +129,7 @@ export default function ResearchInfo() {
                         </div>
 
                         <div style={{ fontSize: '14px', color: 'var(--muted)', borderTop: '1px dashed var(--line)', paddingTop: '16px' }}>
-                            <strong>COA:</strong> Available upon request.
+                            <strong>COA:</strong> Available upon request for $250 and e-mail peptidestream@gmail.com.
                         </div>
                     </div>
                 </section>

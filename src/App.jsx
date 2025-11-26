@@ -44,20 +44,7 @@ function AppContent() {
       </header>
 
       {/* BANNER ON STORE PAGE */}
-      {showBanner && (
-        <>
-          <div className="promo-bar">
-            <div className="promo-scroll">
-              Orders over $150 ship FREE. Orders under $150 incur a flat
-              $15 shipping fee.
-            </div>
-          </div>
 
-          <div className="banner">
-            <img src="/assets/ad.png" alt="Promo Banner" />
-          </div>
-        </>
-      )}
 
       {/* NAV */}
       <nav className="main-nav" aria-label="Main Navigation">
