@@ -20,9 +20,9 @@ export default function Contact() {
 
         <h2 style={{ marginTop: 18 }}>Mailing Address</h2>
         <p>
-          PeptideStream<br />
-          3729 Shadlewood Ct SE<br />
-          Olympia, WA 98501<br />
+          Peptide Stream<br />
+          P.O. box 2492<br />
+          Olympia, WA 98507<br />
           United States
         </p>
 
@@ -35,12 +35,12 @@ export default function Contact() {
         <h2 style={{ marginTop: 18 }}>Important Notice</h2>
         <p style={{ fontSize: '14px', color: 'var(--muted)' }}>
           PeptideStream does <strong>not</strong> offer medical advice,
-          dosage guidance, or any information related to human use.  
+          dosage guidance, or any information related to human use.
           All products are sold strictly for lawful laboratory research-use only.
         </p>
 
         <p style={{ fontSize: '14px', color: 'var(--muted)', marginTop: 12 }}>
-          For fastest support, please email us directly.  
+          For fastest support, please email us directly.
           A PeptideStream representative will respond promptly.
         </p>
       </div>
