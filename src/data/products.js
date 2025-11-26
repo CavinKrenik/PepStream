@@ -321,7 +321,7 @@ export const PRODUCTS = [
   {
     id: 'ghrp6',
     title: 'GHRP-6 10mg',
-    price: 45.0,
+    price: 60.0,
     img: '/assets/placeholder.png',
     coa: null,
     badge: 'In Stock',
@@ -349,7 +349,7 @@ export const PRODUCTS = [
   {
     id: 'motsc',
     title: 'MOTS-c 10mg',
-    price: 55.0,
+    price: 75.0,
     img: '/assets/placeholder.png',
     coa: null,
     badge: 'In Stock',
@@ -377,7 +377,7 @@ export const PRODUCTS = [
   {
     id: 'dsip',
     title: 'DSIP 5mg',
-    price: 50.0,
+    price: 80.0,
     img: '/assets/placeholder.png',
     coa: null,
     badge: 'In Stock',
