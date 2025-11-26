@@ -14,6 +14,14 @@ exports.handler = async (event) => {
 
     sgMail.setApiKey(apiKey)
 
+    const toEmail = process.env.ORDER_TO_EMAIL || 'peptidestream@gmail.com'
+    const fromEmail = process.env.ORDER_FROM_EMAIL || toEmail
+
+    console.log('--- SendGrid Debug ---')
+    console.log('API Key present:', !!apiKey)
+    console.log('To:', toEmail)
+    console.log('From:', fromEmail)
+    console.log('----------------------')
     const data = JSON.parse(event.body || '{}')
     const {
       customer = {},
@@ -22,9 +30,6 @@ exports.handler = async (event) => {
       researchUseConfirmed,
       orderText,
     } = data
-
-    const toEmail = process.env.ORDER_TO_EMAIL || 'peptidestream@gmail.com'
-    const fromEmail = process.env.ORDER_FROM_EMAIL || toEmail
 
     if (!items.length) {
       return {
