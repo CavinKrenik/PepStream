@@ -74,17 +74,7 @@ function AppContent() {
             Research Info
           </Link>
 
-          {/* CONTACT */}
-          <Link
-            to="/contact"
-            className={
-              location.pathname === '/contact'
-                ? 'nav-link active'
-                : 'nav-link'
-            }
-          >
-            Contact
-          </Link>
+
 
           {/* CART (with live count) */}
           <button
