@@ -14,14 +14,23 @@ exports.handler = async (event) => {
 
     sgMail.setApiKey(apiKey)
 
+    // Where the order notification gets delivered (Gmail inbox)
     const toEmail = process.env.ORDER_TO_EMAIL || 'peptidestream@gmail.com'
-    const fromEmail = process.env.ORDER_FROM_EMAIL || toEmail
+
+    // ALWAYS send FROM your verified domain sender
+    const fromEmail = process.env.ORDER_FROM_EMAIL || 'orders@peptidestream.com'
+
+    // Where replies should go (your Gmail)
+    const replyToEmail =
+      process.env.ORDER_REPLY_TO_EMAIL || 'peptidestream@gmail.com'
 
     console.log('--- SendGrid Debug ---')
     console.log('API Key present:', !!apiKey)
     console.log('To:', toEmail)
     console.log('From:', fromEmail)
+    console.log('Reply-To:', replyToEmail)
     console.log('----------------------')
+
     const data = JSON.parse(event.body || '{}')
     const {
       customer = {},
@@ -56,8 +65,7 @@ exports.handler = async (event) => {
         '',
         'Items:',
         ...items.map(
-          (i) =>
-            `- ${i.title} x ${i.qty} @ $${Number(i.price).toFixed(2)}`
+          (i) => `- ${i.title} x ${i.qty} @ $${Number(i.price).toFixed(2)}`
         ),
         '',
         `Subtotal: $${Number(totals.subtotal || 0).toFixed(2)}`,
@@ -67,7 +75,11 @@ exports.handler = async (event) => {
 
     const msg = {
       to: toEmail,
-      from: fromEmail,
+      from: {
+        email: fromEmail,
+        name: 'Peptide Stream',
+      },
+      replyTo: replyToEmail,
       subject,
       text: textBody,
     }
