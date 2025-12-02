@@ -2,7 +2,7 @@ export const PRODUCTS = [
   {
     id: 'retatrutide10',
     title: 'Retatrutide 10mg',
-    price: 95.0,
+    price: 99.0,
     img: '/assets/Retatrutide.JPG',
     coa: '/assets/RetatrutideCertofAnalysis.jpg',
     badge: 'Eligible for Free Shipping',
@@ -30,7 +30,7 @@ export const PRODUCTS = [
   {
     id: 'bacwater',
     title: 'Bacteriostatic Water 10ml',
-    price: 15.0,
+    price: 16.0,
     img: '/assets/bacwater.jpg',
     coa: null,
     badge: 'In Stock',
@@ -59,7 +59,7 @@ export const PRODUCTS = [
   {
     id: 'retatrutide20',
     title: 'Retatrutide 20mg',
-    price: 150.0,
+    price: 156.0,
     img: '/assets/reta20.png',
     coa: '/assets/RetatrutideCertofAnalysis.jpg',
     badge: 'Eligible for Free Shipping',
@@ -87,7 +87,7 @@ export const PRODUCTS = [
   {
     id: 'tesamorelin',
     title: 'Tesamorelin 10mg',
-    price: 75.0,
+    price: 78.0,
     img: '/assets/tesa.jpg',
     coa: null,
     badge: 'Eligible for Free Shipping',
@@ -115,7 +115,7 @@ export const PRODUCTS = [
   {
     id: 'ghkcu',
     title: 'GHK-Cu 50mg',
-    price: 40.0,
+    price: 42.0,
     img: '/assets/GHK-CU.jpg',
     coa: '/assets/GHK-CUCertofAnalysis.jpg',
     badge: 'Eligible for Free Shipping',
@@ -145,7 +145,7 @@ export const PRODUCTS = [
   {
     id: 'nad',
     title: 'NAD+ 500 mg',
-    price: 60.0,
+    price: 63.0,
     unavailable: true,
     img: '/assets/placeholder.png',
     coa: null,
@@ -175,7 +175,7 @@ export const PRODUCTS = [
   {
     id: 'bpc_tb',
     title: 'BPC/TB Blend 10mg',
-    price: 45.0,
+    price: 47.0,
     img: '/assets/bpctb.jpg',
     coa: null,
     badge: 'Eligible for Free Shipping',
@@ -203,7 +203,7 @@ export const PRODUCTS = [
   {
     id: 'mt2',
     title: 'Melanotan 2 (MT2) 10mg',
-    price: 45.0,
+    price: 47.0,
     img: '/assets/mt2.jpg',
     coa: null,
     badge: 'Eligible for Free Shipping',
@@ -233,7 +233,7 @@ export const PRODUCTS = [
   {
     id: 'pt141',
     title: 'PT-141 10mg',
-    price: 120.0,
+    price: 125.0,
     unavailable: true,
     img: '/assets/placeholder.png',
     coa: null,
@@ -262,7 +262,7 @@ export const PRODUCTS = [
   {
     id: 'ipacjc',
     title: 'IPA-CJC Blend 5mg/5mg',
-    price: 85.0,
+    price: 89.0,
     img: '/assets/ipa.jpg',
     coa: null,
     badge: '10–15 Day Wait',
@@ -292,7 +292,7 @@ export const PRODUCTS = [
   {
     id: 'glowstack',
     title: 'Glow Stack 70mg',
-    price: 75.0,
+    price: 78.0,
     img: '/assets/glowstack.jpg',
     coa: null,
     badge: 'US Stock — Limited Supply',
@@ -322,7 +322,7 @@ export const PRODUCTS = [
   {
     id: 'ghrp6',
     title: 'GHRP-6 10mg',
-    price: 60.0,
+    price: 63.0,
     img: '/assets/placeholder.png',
     coa: null,
     badge: 'In Stock',
@@ -350,7 +350,7 @@ export const PRODUCTS = [
   {
     id: 'motsc',
     title: 'MOTS-c 10mg',
-    price: 75.0,
+    price: 78.0,
     img: '/assets/placeholder.png',
     coa: null,
     badge: 'In Stock',
@@ -378,7 +378,7 @@ export const PRODUCTS = [
   {
     id: 'dsip',
     title: 'DSIP 5mg',
-    price: 80.0,
+    price: 84.0,
     img: '/assets/placeholder.png',
     coa: null,
     badge: 'In Stock',
