@@ -149,7 +149,7 @@ export const PRODUCTS = [
     unavailable: true,
     img: '/assets/placeholder.png',
     coa: null,
-    badge: 'In Stock',
+    badge: 'Out of Stock',
     details:
       'Nicotinamide adenine dinucleotide (NAD+) is a pyridine nucleotide supplied as a reference standard for laboratory investigations of cellular metabolism, redox reactions, mitochondrial function, and related biochemical pathways.',
     disclaimer:
